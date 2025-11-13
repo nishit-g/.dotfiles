@@ -12,51 +12,41 @@ vim.g.maplocalleader = " "
 -----------------------------------------------------------------------
 -- General editing
 -----------------------------------------------------------------------
--- Clear search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
-
--- Better escape from insert
 map("i", "jj", "<Esc>", opts)
 
--- Save / quit
 map("n", "<leader>w", "<cmd>w<CR>", opts)
 map("n", "<leader>q", "<cmd>q<CR>", opts)
 map("n", "<leader>Q", "<cmd>qa!<CR>", opts)
 
--- Yank till end of line (like old config)
 map("n", "Y", "y$", opts)
 
--- Move selected lines up/down (visual) – from your old setup
+-- Move selected lines up/down
 map("v", "J", ":m '>+1<CR>gv=gv", opts)
 map("v", "K", ":m '<-2<CR>gv=gv", opts)
 
 -----------------------------------------------------------------------
 -- Windows & splits
 -----------------------------------------------------------------------
--- Navigate splits with Ctrl + hjkl
 map("n", "<C-h>", "<C-w>h", opts)
 map("n", "<C-j>", "<C-w>j", opts)
 map("n", "<C-k>", "<C-w>k", opts)
 map("n", "<C-l>", "<C-w>l", opts)
 
--- Resize splits with arrows
 map("n", "<C-Up>", "<cmd>resize -2<CR>", opts)
 map("n", "<C-Down>", "<cmd>resize +2<CR>", opts)
 map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", opts)
 map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", opts)
 
--- Split shortcuts
 map("n", "<leader>sv", "<cmd>vsplit<CR>", opts)
 map("n", "<leader>sh", "<cmd>split<CR>", opts)
 
 -----------------------------------------------------------------------
--- Buffers (works great with bufferline + mini.bufremove)
+-- Buffers (with bufferline + mini.bufremove)
 -----------------------------------------------------------------------
--- Next / previous buffer (your classic <S-l>/<S-h>)
 map("n", "<S-l>", "<cmd>bnext<CR>", opts)
 map("n", "<S-h>", "<cmd>bprevious<CR>", opts)
 
--- Close buffer (keep window)
 map("n", "<leader>bd", function()
   local ok, bufremove = pcall(require, "mini.bufremove")
   if ok then
@@ -66,16 +56,14 @@ map("n", "<leader>bd", function()
   end
 end, { silent = true, desc = "Close buffer" })
 
--- Close all other buffers
 map("n", "<leader>bo", "<cmd>%bd|e#|bd#<CR>", { silent = true, desc = "Close other buffers" })
 
 -----------------------------------------------------------------------
--- File explorer: mini.files (our nvim-tree replacement)
+-- File explorer: mini.files
 -----------------------------------------------------------------------
 local function open_mini_files(path)
   local mf = require("mini.files")
 
-  -- If already open, just focus / update root
   if mf.close() then
     mf.open(path, true)
   else
@@ -83,8 +71,7 @@ local function open_mini_files(path)
   end
 end
 
--- <leader>e : explorer at current file's directory
-map("n", "<leader>E", function()
+map("n", "<leader>e", function()
   local bufname = vim.api.nvim_buf_get_name(0)
   if bufname == "" then
     open_mini_files(nil)
@@ -93,13 +80,12 @@ map("n", "<leader>E", function()
   end
 end, { silent = true, desc = "Explorer (file dir)" })
 
--- <leader>E : explorer at project root (cwd)
-map("n", "<leader>e", function()
+map("n", "<leader>E", function()
   open_mini_files(vim.loop.cwd())
 end, { silent = true, desc = "Explorer (project root)" })
 
 -----------------------------------------------------------------------
--- Fuzzy finding: fzf-lua (files, grep, buffers, help)
+-- Fuzzy finding: fzf-lua
 -----------------------------------------------------------------------
 map("n", "<leader>ff", function() require("fzf-lua").files() end,
   { silent = true, desc = "Find files" })
@@ -117,7 +103,7 @@ map("n", "<leader>fr", function() require("fzf-lua").oldfiles() end,
   { silent = true, desc = "Recent files" })
 
 -----------------------------------------------------------------------
--- Diagnostics (LSP + nvim-lint)
+-- Diagnostics
 -----------------------------------------------------------------------
 map("n", "[d", vim.diagnostic.goto_prev, { silent = true, desc = "Prev diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
@@ -125,34 +111,28 @@ map("n", "<leader>ld", vim.diagnostic.open_float, { silent = true, desc = "Line 
 map("n", "<leader>lq", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics loclist" })
 
 -----------------------------------------------------------------------
--- LSP general (fallback – on top of on_attach mappings)
+-- LSP (generic; on_attach adds buffer-local too)
 -----------------------------------------------------------------------
 map("n", "gd", vim.lsp.buf.definition, { silent = true, desc = "Goto definition" })
 map("n", "gD", vim.lsp.buf.declaration, { silent = true, desc = "Goto declaration" })
 map("n", "gi", vim.lsp.buf.implementation, { silent = true, desc = "Goto implementation" })
-map("n", "gr", vim.lsp.buf.references, { silent = true, desc = "References" })
+map("n", "gr", vim.lsp.buf.references, { silent = true, desc = "Goto references" })
 map("n", "K", vim.lsp.buf.hover, { silent = true, desc = "Hover" })
 
 map("n", "<leader>rn", vim.lsp.buf.rename, { silent = true, desc = "Rename symbol" })
 map("n", "<leader>ca", vim.lsp.buf.code_action, { silent = true, desc = "Code action" })
 
--- Format via LSP fallback (you also have <leader>mp from Conform config)
 map("n", "<leader>lf", function()
   vim.lsp.buf.format({ async = true })
 end, { silent = true, desc = "LSP format" })
 
 -----------------------------------------------------------------------
--- Git: gitsigns (hunts) + fugitive (porcelain)
+-- Git: gitsigns toggle + fugitive
 -----------------------------------------------------------------------
--- Gitsigns hunk navigation & actions are set in its on_attach,
--- but we add a couple of global helpers here too.
-
--- Toggle git signs
 map("n", "<leader>ht", function()
   require("gitsigns").toggle_signs()
 end, { silent = true, desc = "Toggle git signs" })
 
--- Full Git porcelain: Fugitive
 map("n", "<leader>gs", "<cmd>Git<CR>", { silent = true, desc = "Git status" })
 map("n", "<leader>gb", "<cmd>Git blame<CR>", { silent = true, desc = "Git blame" })
 map("n", "<leader>gl", "<cmd>Git log<CR>", { silent = true, desc = "Git log" })
@@ -160,11 +140,8 @@ map("n", "<leader>gD", "<cmd>Gvdiffsplit<CR>", { silent = true, desc = "Git diff
 map("n", "<leader>gp", "<cmd>Git push<CR>", { silent = true, desc = "Git push" })
 
 -----------------------------------------------------------------------
--- Lint / Format (extra mappings to complement plugin configs)
+-- Lint / Format helpers
 -----------------------------------------------------------------------
--- Conform already defines <leader>mp in its config; we keep that.
--- Here we add a quick "lint now" helper (in case plugin didn't add one).
-
 map("n", "<leader>ml", function()
   local ok, lint = pcall(require, "lint")
   if ok then
@@ -173,9 +150,55 @@ map("n", "<leader>ml", function()
     vim.notify("nvim-lint not available", vim.log.levels.WARN)
   end
 end, { silent = true, desc = "Run linter" })
+-- NOTE: <leader>mp is defined in conform.nvim config.
 
 -----------------------------------------------------------------------
--- Tmux integration (optional, can reuse your old sessionizer)
+-- Code outline: aerial.nvim
 -----------------------------------------------------------------------
--- If you keep a tmux-sessionizer script in PATH:
+map("n", "<leader>ls", "<cmd>AerialToggle!<CR>", { silent = true, desc = "Symbols outline (aerial)" })
+
+-----------------------------------------------------------------------
+-- Trouble: diagnostics / references / lists
+-----------------------------------------------------------------------
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", {
+  silent = true,
+  desc = "Diagnostics (workspace)",
+})
+
+map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", {
+  silent = true,
+  desc = "Diagnostics (buffer)",
+})
+
+map("n", "<leader>xr", "<cmd>Trouble lsp_references toggle<CR>", {
+  silent = true,
+  desc = "LSP references (Trouble)",
+})
+
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<CR>", {
+  silent = true,
+  desc = "Quickfix (Trouble)",
+})
+
+map("n", "<leader>xl", "<cmd>Trouble loclist toggle<CR>", {
+  silent = true,
+  desc = "Loclist (Trouble)",
+})
+
+-----------------------------------------------------------------------
+-- Project root helper (cd to git root)
+-----------------------------------------------------------------------
+map("n", "<leader>pr", function()
+  local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if root and root ~= "" then
+    vim.cmd("cd " .. root)
+    vim.notify("cd " .. root)
+  else
+    vim.notify("Not a git repo", vim.log.levels.WARN)
+  end
+end, { silent = true, desc = "cd to project root (git)" })
+
+-----------------------------------------------------------------------
+-- (Optional) Tmux integration – keep commented until you want it
+-----------------------------------------------------------------------
 -- map("n", "<leader><C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", opts)
