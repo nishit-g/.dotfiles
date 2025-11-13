@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# local overrides (not tracked)
+*.local
+.zshrc.local
+.gitconfig.local

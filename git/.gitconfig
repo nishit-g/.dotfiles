@@ -1,0 +1,20 @@
+[user]
+    name = Nishit Gupta
+    email = nishit.gupta6708@gmail.com
+
+[core]
+    editor = nvim
+    whitespace = trailing-space,space-before-tab
+
+[color]
+    ui = auto
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    cm = commit
+    lg = log --oneline --graph --decorate
+
+[includeIf "gitdir:~/"]
+    path = ~/.gitconfig.local
