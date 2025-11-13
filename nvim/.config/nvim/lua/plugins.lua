@@ -29,22 +29,35 @@ require("lazy").setup({
     "echasnovski/mini.nvim",
     version = false,
     config = function()
+      -- Files (explorer)
       require("mini.files").setup({
         windows = {
-          preview = true,     -- right-hand preview window
-          width_focus = 30,   -- width of the main tree
-          width_preview = 70, -- width of preview
+          preview = true,
+          width_focus = 30,
+          width_preview = 70,
         },
         options = {
-          use_as_default_explorer = true, -- replaces netrw
+          use_as_default_explorer = true,
         },
       })
 
+      -- Surround / commenting / pairs / buffers / statusline
       require("mini.surround").setup()
       require("mini.comment").setup()
       require("mini.pairs").setup()
       require("mini.bufremove").setup()
       require("mini.statusline").setup()
+
+      -- Indent guides (replacement for indent-blankline)
+      require("mini.indentscope").setup({
+        symbol = "│",
+        draw = {
+          delay = 50,
+        },
+        options = {
+          try_as_border = true,
+        },
+      })
     end,
   },
 
@@ -81,10 +94,57 @@ require("lazy").setup({
   -------------------------------------------------
   -- Git: gitsigns
   -------------------------------------------------
+  -------------------------------------------------
+  -- Git: gitsigns (with rich keymaps)
+  -------------------------------------------------
   {
     "lewis6991/gitsigns.nvim",
     config = function()
-      require("gitsigns").setup()
+      require("gitsigns").setup({
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, lhs, rhs, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            opts.silent = true
+            vim.keymap.set(mode, lhs, rhs, opts)
+          end
+
+          -- Navigation between hunks
+          map("n", "]h", function()
+            if vim.wo.diff then return "]h" end
+            vim.schedule(function() gs.next_hunk() end)
+          end, { expr = true })
+
+          map("n", "[h", function()
+            if vim.wo.diff then return "[h" end
+            vim.schedule(function() gs.prev_hunk() end)
+          end, { expr = true })
+
+          -- Stage / reset / preview
+          map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+          map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
+          map("v", "<leader>hs", function()
+            gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+          end, { desc = "Stage hunk (visual)" })
+          map("v", "<leader>hr", function()
+            gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+          end, { desc = "Reset hunk (visual)" })
+
+          map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+
+          map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+          map("n", "<leader>hb", function()
+            gs.blame_line({ full = true })
+          end, { desc = "Git blame line" })
+
+          -- Toggle signs / linehl
+          map("n", "<leader>ht", gs.toggle_signs, { desc = "Toggle git signs" })
+          map("n", "<leader>hl", gs.toggle_linehl, { desc = "Toggle git linehl" })
+        end,
+      })
     end,
   },
 
@@ -106,7 +166,7 @@ require("lazy").setup({
     config = function()
       local mason_lspconfig = require("mason-lspconfig")
       mason_lspconfig.setup({
-        ensure_installed = { "lua_ls", "tsserver" },
+        ensure_installed = { "lua_ls", "ts_ls" },
       })
 
       local lspconfig = require("lspconfig")
@@ -244,4 +304,65 @@ require("lazy").setup({
       end, { desc = "Run linter for current file" })
     end,
   },
+  -------------------------------------------------
+  -- Git porcelain: vim-fugitive
+  -------------------------------------------------
+  {
+    "tpope/vim-fugitive",
+    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gblame" },
+  },
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    event = "VeryLazy",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      local ok, bufferline = pcall(require, "bufferline")
+      if not ok then
+        return
+      end
+
+      bufferline.setup({
+        options = {
+          numbers = "none",
+          close_command = "bdelete! %d",
+          right_mouse_command = "bdelete! %d",
+          left_mouse_command = "buffer %d",
+          middle_mouse_command = nil,
+
+          indicator = {
+            icon = "▎",
+            style = "icon",
+          },
+          buffer_close_icon = "",
+          modified_icon = "●",
+          close_icon = "",
+          left_trunc_marker = "",
+          right_trunc_marker = "",
+
+          max_name_length = 30,
+          max_prefix_length = 30,
+          tab_size = 21,
+
+          diagnostics = false, -- set to "nvim_lsp" if you want diagnostics in tabs
+          diagnostics_update_in_insert = false,
+
+          offsets = {
+            { filetype = "NvimTree", text = "", padding = 1 },
+            { filetype = "neo-tree", text = "", padding = 1 },
+          },
+
+          show_buffer_icons = true,
+          show_buffer_close_icons = true,
+          show_close_icon = true,
+          show_tab_indicators = true,
+          persist_buffer_sort = true,
+          separator_style = "thin",
+          enforce_regular_tabs = true,
+          always_show_bufferline = true,
+        },
+      })
+    end,
+  }
+
 })
