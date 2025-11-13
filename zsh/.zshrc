@@ -11,15 +11,11 @@ fi
 # PATH tweaks
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
-# ---------- Antidote (plugins) ----------
+# ---------- Antidote (plugins via bundle) ----------
 if [[ -d "${ZDOTDIR:-$HOME}/.antidote" ]]; then
   source "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh"
-  antidote load << 'PLUGINS'
-zsh-users/zsh-autosuggestions
-zsh-users/zsh-syntax-highlighting
-zsh-users/zsh-completions
-ohmyzsh/ohmyzsh path:lib
-PLUGINS
+  antidote bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.zsh
+  source ~/.zsh_plugins.zsh
 fi
 
 # ---------- zoxide (better cd) ----------
