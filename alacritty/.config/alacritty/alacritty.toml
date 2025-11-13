@@ -1,6 +1,6 @@
 [window]
 padding = { x = 8, y = 8 }
-decorations = "buttonless"
+decorations = "full"
 opacity = 0.96
 dynamic_title = true
 
