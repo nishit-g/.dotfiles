@@ -3,79 +3,108 @@ set -euo pipefail
 
 echo "▶ Starting macOS bootstrap..."
 
-# ---------- Homebrew ----------
+if [[ "$OSTYPE" != darwin* ]]; then
+  echo "This script is intended for macOS only."
+  exit 1
+fi
+
+# --- Homebrew -------------------------------------------------------
 if ! command -v brew >/dev/null 2>&1; then
-  echo "▶ Installing Homebrew..."
+  echo "▶ Homebrew not found. Installing..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  echo "✔ Homebrew installed (new)."
 else
   echo "✔ Homebrew already installed."
-  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# ---------- CLI tools ----------
+BREW_PREFIX="$(brew --prefix)"
+
 echo "▶ Installing CLI tools..."
-brew install \
-  git \
-  zsh \
-  tmux \
-  neovim \
-  fzf \
-  ripgrep \
-  ugrep \
-  fd \
-  eza \
-  zoxide \
-  nnn \
-  broot \
-  lazygit \
-  gh \
-  jq \
-  yq \
-  hyperfine \
+BREW_FORMULAE=(
+  git
+  zsh
+  tmux
+  neovim
+  fzf
+  ripgrep
+  ugrep
+  fd
+  eza
+  zoxide
+  nnn
+  broot
+  lazygit
+  gh
+  jq
+  yq
+  hyperfine
   stow
+)
 
-# ---------- Fonts & terminal ----------
-echo "▶ Installing fonts and terminal apps..."
-brew install --cask font-jetbrains-mono-nerd-font || true
-brew install --cask alacritty
-
-# ---------- Antidote for zsh ----------
-if [[ ! -d "${ZDOTDIR:-$HOME}/.antidote" ]]; then
-  echo "▶ Installing Antidote (zsh plugin manager)..."
-  git clone --depth=1 https://github.com/mattmc3/antidote.git "${ZDOTDIR:-$HOME}"/.antidote
-else
-  echo "✔ Antidote already present."
-fi
-
-# ---------- Backup existing dotfiles (once, non-destructive) ----------
-backup() {
-  local file="$1"
-  if [[ -e "$file" && ! -L "$file" ]]; then
-    echo "  → Backing up $file to ${file}.backup"
-    mv "$file" "${file}.backup"
+for pkg in "${BREW_FORMULAE[@]}"; do
+  if brew list --formula | grep -q "^${pkg}\$"; then
+    echo "  • ${pkg} already installed."
+  else
+    echo "  • Installing ${pkg}..."
+    brew install "${pkg}"
   fi
-}
+done
 
-echo "▶ Backing up existing dotfiles (if any)..."
-backup "$HOME/.zshrc"
-backup "$HOME/.tmux.conf"
-backup "$HOME/.gitconfig"
-backup "$HOME/.config/alacritty"
+echo "▶ Installing GUI apps (if not present)..."
+BREW_CASKS=(
+  alacritty
+)
 
-mkdir -p "$HOME/.config"
+for cask in "${BREW_CASKS[@]}"; do
+  if brew list --cask | grep -q "^${cask}\$"; then
+    echo "  • ${cask} already installed."
+  else
+    echo "  • Installing ${cask}..."
+    brew install --cask "${cask}"
+  fi
+done
 
-# ---------- Stow dotfiles ----------
-echo "▶ Symlinking dotfiles with stow..."
-cd "$HOME/dotfiles"
-
-stow zsh tmux alacritty git macos
-
-# ---------- macOS defaults ----------
-if [[ -x "$HOME/dotfiles/macos/.macos" ]]; then
-  echo "▶ Applying macOS defaults..."
-  "$HOME/dotfiles/macos/.macos" || true
+# FZF key bindings (optional)
+if [[ -x "${BREW_PREFIX}/opt/fzf/install" ]]; then
+  echo "▶ Enabling fzf key bindings..."
+  yes | "${BREW_PREFIX}/opt/fzf/install" --no-bash --no-fish --key-bindings --completion
+else
+  echo "▶ Skipping fzf key bindings (installer not found)."
 fi
 
-echo "✅ Bootstrap complete. Open Alacritty and enjoy your new setup."
+echo "▶ Linking dotfiles with stow..."
+
+# Go to dotfiles repo root (this script should live in it)
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# Create required directories if missing
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/bin"
+
+# Stow modules if present
+STOW_DIRS=(
+  nvim
+  zsh
+  tmux
+  alacritty
+  bin
+)
+
+for dir in "${STOW_DIRS[@]}"; do
+  if [[ -d "${dir}" ]]; then
+    echo "  • Stowing ${dir}"
+    stow "${dir}"
+  else
+    echo "  • Skipping ${dir} (directory not found in dotfiles)."
+  fi
+done
+
+echo ""
+echo "▶ NOTE:"
+echo "  - If you want zsh as your default shell, run:"
+echo "      chsh -s \"$(command -v zsh)\""
+echo "  - Then restart your terminal."
+echo "  - First Neovim run: open 'nvim' and run ':Lazy sync' once to install plugins."
+
+echo ""
+echo "✔ macOS bootstrap complete."
