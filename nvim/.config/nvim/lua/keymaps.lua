@@ -59,32 +59,6 @@ end, { silent = true, desc = "Close buffer" })
 map("n", "<leader>bo", "<cmd>%bd|e#|bd#<CR>", { silent = true, desc = "Close other buffers" })
 
 -----------------------------------------------------------------------
--- File explorer: mini.files
------------------------------------------------------------------------
-local function open_mini_files(path)
-  local mf = require("mini.files")
-
-  if mf.close() then
-    mf.open(path, true)
-  else
-    mf.open(path, true)
-  end
-end
-
-map("n", "<leader>e", function()
-  local bufname = vim.api.nvim_buf_get_name(0)
-  if bufname == "" then
-    open_mini_files(nil)
-  else
-    open_mini_files(bufname)
-  end
-end, { silent = true, desc = "Explorer (file dir)" })
-
-map("n", "<leader>E", function()
-  open_mini_files(vim.loop.cwd())
-end, { silent = true, desc = "Explorer (project root)" })
-
------------------------------------------------------------------------
 -- Fuzzy finding: fzf-lua
 -----------------------------------------------------------------------
 map("n", "<leader>ff", function() require("fzf-lua").files() end,

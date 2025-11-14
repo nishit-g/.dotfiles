@@ -33,6 +33,41 @@ require("lazy").setup({
     lazy = true,
   },
 
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup({
+        view = {
+          width = 32,
+          side = "left",
+        },
+        renderer = {
+          highlight_git = true,
+          highlight_opened_files = "all",
+          icons = {
+            glyphs = {
+              git = {
+                unstaged = "",
+                staged = "",
+                untracked = "",
+              },
+            },
+          },
+        },
+        filters = {
+          dotfiles = false,
+        },
+        git = {
+          enable = true,
+        },
+      })
+
+      -- Keymap
+      vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
+    end,
+  },
+
   -------------------------------------------------
   -- mini.nvim: core UX (files, surround, comment, pairs, bufremove, statusline, indentscope)
   -------------------------------------------------
@@ -40,18 +75,6 @@ require("lazy").setup({
     "echasnovski/mini.nvim",
     version = false,
     config = function()
-      -- File explorer
-      require("mini.files").setup({
-        windows = {
-          preview = true,
-          width_focus = 30,
-          width_preview = 70,
-        },
-        options = {
-          use_as_default_explorer = true,
-        },
-      })
-
       -- Editing helpers
       require("mini.surround").setup()
       require("mini.comment").setup()

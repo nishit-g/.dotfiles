@@ -53,6 +53,7 @@ fi
 
 alias ..='cd ..'
 alias ...='cd ../..'
+alias nv='nvim'
 
 # ---------- modern ls (eza) ----------
 if command -v eza >/dev/null 2>&1; then
@@ -87,6 +88,17 @@ alias ga='git add .'
 alias gc='git commit'
 alias gp='git push'
 alias lg='lazygit'
+# --- tmux sessionizer keybinding (Ctrl+F) ---
+if command -v tmux-sessionizer >/dev/null 2>&1; then
+  tmux_sessionizer_widget() {
+    tmux-sessionizer
+    zle reset-prompt
+  }
+
+  zle -N tmux_sessionizer_widget
+  bindkey '^F' tmux_sessionizer_widget
+fi
+
 
 # ---------- QoL options ----------
 setopt AUTO_CD
@@ -113,3 +125,5 @@ bindkey -e
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+. $(brew --prefix asdf)/libexec/asdf.sh
