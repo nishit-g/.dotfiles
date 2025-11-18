@@ -25,13 +25,63 @@ map("n", "Y", "y$", opts)
 map("v", "J", ":m '>+1<CR>gv=gv", opts)
 map("v", "K", ":m '<-2<CR>gv=gv", opts)
 
+-- Better Join (keeps cursor in place)
+map("n", "J", "mzJ`z", opts)
+
+-- Half page jumping (centered)
+map("n", "<C-d>", "<C-d>zz", opts)
+map("n", "<C-u>", "<C-u>zz", opts)
+
+-- Search terms (centered)
+map("n", "n", "nzzzv", opts)
+map("n", "N", "Nzzzv", opts)
+
+-- Paste without losing register
+map("x", "<leader>p", [["_dP]], opts)
+
+-- System Clipboard
+map({ "n", "v" }, "<leader>y", [["+y]], opts)
+map("n", "<leader>Y", [["+Y]], opts)
+
+-- Delete to void register
+map({ "n", "v" }, "<leader>d", [["_d]], opts)
+
+-- Inc-Rename
+map("n", "<leader>rn", function()
+  return ":IncRename " .. vim.fn.expand("<cword>")
+end, { expr = true, desc = "Rename (IncRename)" })
+
+-- Harpoon
+map("n", "<leader>a", function() require("harpoon"):list():add() end, { desc = "Harpoon Add" })
+map("n", "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, { desc = "Harpoon Menu" })
+
+map("n", "<C-h>", function() require("harpoon"):list():select(1) end, { desc = "Harpoon 1" })
+map("n", "<C-j>", function() require("harpoon"):list():select(2) end, { desc = "Harpoon 2" })
+map("n", "<C-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
+map("n", "<C-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
+
+-- Toggle previous & next buffers (overrides default C-h/j/k/l window nav if you prefer Harpoon there)
+-- NOTE: We are overwriting window navigation <C-h/j/k/l> with Harpoon.
+-- You can use <leader>w + h/j/k/l or just <C-w> + h/j/k/l for windows.
+
 -----------------------------------------------------------------------
 -- Windows & splits
 -----------------------------------------------------------------------
-map("n", "<C-h>", "<C-w>h", opts)
-map("n", "<C-j>", "<C-w>j", opts)
-map("n", "<C-k>", "<C-w>k", opts)
-map("n", "<C-l>", "<C-w>l", opts)
+-- Windows & splits (remapped to avoid conflict with Harpoon if desired, or keep as is)
+-- map("n", "<C-h>", "<C-w>h", opts) -- Conflict with Harpoon
+-- map("n", "<C-j>", "<C-w>j", opts) -- Conflict with Harpoon
+-- map("n", "<C-k>", "<C-w>k", opts) -- Conflict with Harpoon
+-- map("n", "<C-l>", "<C-w>l", opts) -- Conflict with Harpoon
+
+-- Window Management
+map("n", "<leader>w-", "<C-w>s", { desc = "Split Horizontal" })
+map("n", "<leader>w|", "<C-w>v", { desc = "Split Vertical" })
+map("n", "<leader>wd", "<C-w>c", { desc = "Close Window" })
+map("n", "<leader>ww", "<C-w>w", { desc = "Other Window" })
+map("n", "<leader>wo", "<C-w>o", { desc = "Close Other Windows" })
+-- Also keep these for backward compatibility if you like
+map("n", "<leader>sh", "<C-w>s", { desc = "Split Horizontal" })
+map("n", "<leader>sv", "<C-w>v", { desc = "Split Vertical" })
 
 map("n", "<C-Up>", "<cmd>resize -2<CR>", opts)
 map("n", "<C-Down>", "<cmd>resize +2<CR>", opts)

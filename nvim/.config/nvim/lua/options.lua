@@ -25,5 +25,7 @@ o.timeoutlen = 400
 
 o.wrap = false
 
+o.undofile = true
+
 g.mapleader = " "
 g.maplocalleader = " "

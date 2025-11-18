@@ -8,12 +8,29 @@ return {
       require("mini.comment").setup()
       require("mini.pairs").setup()
       require("mini.bufremove").setup()
+      require("mini.ai").setup({ n_lines = 500 })
       require("mini.indentscope").setup({
         symbol = "│",
         draw = { delay = 50 },
         options = { try_as_border = true },
       })
     end,
+  },
+
+  -- Harpoon
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("harpoon").setup({})
+    end,
+  },
+
+  -- Auto Tag
+  {
+    "windwp/nvim-ts-autotag",
+    opts = {},
   },
 
   -- Treesitter

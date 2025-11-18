@@ -81,6 +81,12 @@ return {
     },
   },
 
+  -- Inc-Rename
+  {
+    "smjonas/inc-rename.nvim",
+    opts = {},
+  },
+
   -- UI Enhancements (Noice)
   {
     "folke/noice.nvim",

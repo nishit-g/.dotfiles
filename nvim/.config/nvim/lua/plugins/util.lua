@@ -21,6 +21,7 @@ return {
       wk.setup({})
       wk.add({
         { "<leader>b", group = "buffers" },
+        { "<leader>d", group = "debug" },
         { "<leader>e", group = "explorer" },
         { "<leader>f", group = "find" },
         { "<leader>g", group = "git" },
@@ -28,6 +29,8 @@ return {
         { "<leader>l", group = "lsp" },
         { "<leader>m", group = "meta" },
         { "<leader>q", group = "session/quit" },
+        { "<leader>t", group = "test" },
+        { "<leader>w", group = "windows" },
       })
     end,
   },
