@@ -201,11 +201,8 @@ require("lazy").setup({
       "neovim/nvim-lspconfig",
     },
     config = function()
-      local mason_lspconfig = require("mason-lspconfig")
-      local lspconfig = require("lspconfig")
-
-      mason_lspconfig.setup({
-        ensure_installed = { "lua_ls", "tsserver" },
+      require("mason-lspconfig").setup({
+        ensure_installed = { "lua_ls", "ts_ls" },
       })
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -214,27 +211,26 @@ require("lazy").setup({
         capabilities = blink.get_lsp_capabilities(capabilities)
       end
 
-      local on_attach = function(_, bufnr)
-        local map = function(mode, lhs, rhs, desc)
-          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
-        end
+      -- Set global defaults for all LSP servers
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
 
-        map("n", "gd", vim.lsp.buf.definition, "Goto definition")
-        map("n", "gD", vim.lsp.buf.declaration, "Goto declaration")
-        map("n", "gi", vim.lsp.buf.implementation, "Goto implementation")
-        map("n", "gr", vim.lsp.buf.references, "Goto references")
-        map("n", "K", vim.lsp.buf.hover, "Hover")
+      -- LspAttach autocommand for keymaps
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local bufnr = args.buf
+          local map = function(mode, lhs, rhs, desc)
+            vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
+          end
 
-        map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
-        map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
-      end
-
-      mason_lspconfig.setup_handlers({
-        function(server_name)
-          lspconfig[server_name].setup({
-            on_attach = on_attach,
-            capabilities = capabilities,
-          })
+          map("n", "gd", vim.lsp.buf.definition, "Goto definition")
+          map("n", "gD", vim.lsp.buf.declaration, "Goto declaration")
+          map("n", "gi", vim.lsp.buf.implementation, "Goto implementation")
+          map("n", "gr", vim.lsp.buf.references, "Goto references")
+          map("n", "K", vim.lsp.buf.hover, "Hover")
+          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+          map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
         end,
       })
     end,
@@ -386,15 +382,15 @@ require("lazy").setup({
     config = function()
       local wk = require("which-key")
       wk.setup({})
-      wk.register({
-        ["<leader>f"] = { name = "+find" },
-        ["<leader>g"] = { name = "+git" },
-        ["<leader>l"] = { name = "+lsp" },
-        ["<leader>m"] = { name = "+meta" },
-        ["<leader>b"] = { name = "+buffers" },
-        ["<leader>h"] = { name = "+hunks" },
-        ["<leader>e"] = { name = "+explorer" },
-        ["<leader>q"] = { name = "+session/quit" },
+      wk.add({
+        { "<leader>b", group = "buffers" },
+        { "<leader>e", group = "explorer" },
+        { "<leader>f", group = "find" },
+        { "<leader>g", group = "git" },
+        { "<leader>h", group = "hunks" },
+        { "<leader>l", group = "lsp" },
+        { "<leader>m", group = "meta" },
+        { "<leader>q", group = "session/quit" },
       })
     end,
   },
