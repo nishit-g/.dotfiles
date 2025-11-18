@@ -4,6 +4,7 @@
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # ---------- Core ----------
 export ZDOTDIR="$HOME"
@@ -127,3 +128,16 @@ bindkey -e
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 . $(brew --prefix asdf)/libexec/asdf.sh
+
+if command -v tmux-sessionizer >/dev/null 2>&1; then
+  tmux_sessionizer_widget() {
+    tmux-sessionizer
+    zle reset-prompt
+  }
+
+  zle -N tmux_sessionizer_widget
+  bindkey '^f' tmux_sessionizer_widget
+fi
+
+# Added by Antigravity
+export PATH="/Users/nishit.gupta/.antigravity/antigravity/bin:$PATH"
