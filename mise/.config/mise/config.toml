@@ -1,0 +1,10 @@
+[settings]
+auto_install = true
+legacy_version_file = true
+quiet = false
+experimental = false
+trusted_config_paths = ["~/"]
+
+[tools]
+node = "lts"
+python = "latest"
