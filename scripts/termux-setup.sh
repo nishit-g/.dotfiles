@@ -98,7 +98,7 @@ install_packages() {
 install_starship() {
     if ! command -v starship >/dev/null 2>&1; then
         info "Installing Starship prompt..."
-        curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$PREFIX/bin"
+        pkg install -y starship
         success "Starship installed"
     else
         success "Starship already installed"
