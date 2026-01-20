@@ -20,6 +20,7 @@ BREW_PREFIX="$(brew --prefix)"
 
 echo "▶ Adding taps..."
 brew tap joshmedeski/sesh
+brew tap nikitabobko/tap
 
 echo "▶ Installing CLI tools..."
 BREW_FORMULAE=(
@@ -63,6 +64,9 @@ done
 echo "▶ Installing GUI apps (if not present)..."
 BREW_CASKS=(
   alacritty
+  aerospace
+  karabiner-elements
+  raycast
 )
 
 for cask in "${BREW_CASKS[@]}"; do
@@ -102,6 +106,8 @@ STOW_DIRS=(
   yazi
   bat
   mise
+  aerospace
+  karabiner
 )
 
 for dir in "${STOW_DIRS[@]}"; do
@@ -112,6 +118,11 @@ for dir in "${STOW_DIRS[@]}"; do
     echo "  • Skipping ${dir} (directory not found in dotfiles)."
   fi
 done
+
+echo "▶ Applying macOS defaults..."
+if [[ -f "macos/defaults.sh" ]]; then
+  bash macos/defaults.sh
+fi
 
 echo ""
 echo "▶ Cleanup (run manually if needed):"
@@ -124,6 +135,10 @@ echo "  2. Restart terminal (zinit will auto-install plugins)"
 echo "  3. Run 'p10k configure' if prompt looks broken"
 echo "  4. Import shell history: atuin import auto"
 echo "  5. First Neovim run: nvim, then :Lazy sync"
+echo "  6. Grant accessibility permissions to:"
+echo "       - Aerospace (System Settings → Privacy → Accessibility)"
+echo "       - Karabiner-Elements (will prompt automatically)"
+echo "  7. Open Raycast (Cmd+Space after granting permissions)"
 
 echo ""
 echo "✔ macOS bootstrap complete."
