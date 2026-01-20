@@ -21,6 +21,41 @@ return {
     end,
   },
 
+  -- Mason Tool Installer (auto-install formatters, linters, LSPs)
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          -- LSP servers
+          "lua-language-server",
+          "typescript-language-server",
+          "pyright",
+          "json-lsp",
+          "css-lsp",
+          "html-lsp",
+          "bash-language-server",
+          "tailwindcss-language-server",
+          -- Formatters
+          "stylua",
+          "prettierd",
+          "black",
+          "shfmt",
+          -- Linters
+          "eslint_d",
+          "shellcheck",
+          "hadolint",
+          "markdownlint",
+          -- DAP
+          "debugpy",
+        },
+        auto_update = false,
+        run_on_start = true,
+      })
+    end,
+  },
+
   -- Mason LSP Config
   {
     "williamboman/mason-lspconfig.nvim",
@@ -30,7 +65,16 @@ return {
     },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ts_ls" },
+        ensure_installed = {
+          "lua_ls",
+          "ts_ls",
+          "pyright",
+          "jsonls",
+          "cssls",
+          "html",
+          "bashls",
+          "tailwindcss",
+        },
       })
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -101,6 +145,9 @@ return {
         yaml = { "prettierd", "prettier" },
         markdown = { "prettierd", "prettier" },
         python = { "black" },
+        sh = { "shfmt" },
+        bash = { "shfmt" },
+        zsh = { "shfmt" },
       },
       format_on_save = function(bufnr)
         local disable_ft = { "sql", "txt" }
