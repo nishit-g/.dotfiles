@@ -12,6 +12,20 @@ return {
     },
   },
 
+  -- Markdown Preview
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = "cd app && npm install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    keys = {
+      { "<leader>mm", "<cmd>MarkdownPreviewToggle<CR>", ft = "markdown", desc = "Markdown Preview" },
+    },
+  },
+
   -- Which-key
   {
     "folke/which-key.nvim",
@@ -27,7 +41,7 @@ return {
         { "<leader>g", group = "git" },
         { "<leader>h", group = "hunks" },
         { "<leader>l", group = "lsp" },
-        { "<leader>m", group = "meta" },
+        { "<leader>m", group = "meta/markdown" },
         { "<leader>q", group = "session/quit" },
         { "<leader>r", group = "rename" },
         { "<leader>s", group = "search/notify" },

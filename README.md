@@ -1,281 +1,167 @@
-# .dotfiles
+# dotfiles
 
-An enterprise-grade macOS development environment optimized for performance, productivity, and aesthetics.
+> ChaosMonk's development environment. macOS + Neovim + tmux + zsh.
 
 ## Quick Start
 
-Experience the full setup with a single command:
-
 ```bash
-curl -sL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/install.sh | bash
+# One-liner install (fresh Mac)
+curl -fsSL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/install.sh | bash
+
+# Or clone and run
+git clone git@github.com:nishit-g/.dotfiles.git ~/.dotfiles
+cd ~/.dotfiles && make install
 ```
 
-## Features
+## What's Included
 
-- **Blazing Fast Shell**: Zsh with `zinit` turbo-loading, achieving ~80ms startup time.
-- **Tiling Window Management**: `Aerospace` for a keyboard-driven workflow.
-- **Session Management**: `tmux` paired with `sesh` for seamless project switching.
-- **Modern CLI Stack**: Rust-powered tools (`eza`, `bat`, `fd`, `ripgrep`, `zoxide`).
-- **Smart History**: `Atuin` for fuzzy-searchable, synchronized shell history.
-- **Advanced Editor**: `Neovim` (LazyVim) configured for high-performance coding.
-- **Keyboard Optimization**: `Karabiner` mapping CapsLock to Hyper/Escape.
-
-## Tool Stack
-
-| Tool | Purpose | Config Location |
-| :--- | :--- | :--- |
-| **Alacritty** | GPU-accelerated terminal | `alacritty/.config/alacritty/` |
-| **Aerospace** | Tiling window manager | `aerospace/.config/aerospace/` |
-| **Zsh** | Interactive shell | `zsh/.zshrc` |
-| **Tmux** | Terminal multiplexer | `tmux/.tmux.conf` |
-| **Neovim** | Text editor | `nvim/.config/nvim/` |
-| **Sesh** | Session manager | `sesh/.config/sesh/` |
-| **Atuin** | Shell history | `atuin/.config/atuin/` |
-| **Yazi** | Terminal file manager | `yazi/.config/yazi/` |
-| **Mise** | Runtime manager | `mise/.config/mise/` |
-| **Karabiner** | Keyboard customizer | `karabiner/.config/karabiner/` |
-
-## Keybindings
-
-### Aerospace (Window Management)
-
-| Binding | Action |
-| :--- | :--- |
-| `Alt + 1-4` | Switch to workspace 1-4 |
-| `Alt + Shift + 1-4` | Move window to workspace 1-4 |
-| `Alt + H/J/K/L` | Focus window Left/Down/Up/Right |
-| `Alt + Shift + H/J/K/L` | Move window Left/Down/Up/Right |
-| `Alt + Enter` | Open Alacritty |
-| `Alt + F` | Toggle Fullscreen |
-| `Alt + T` | Toggle Floating/Tiling |
-| `Alt + Q` | Close focused window |
-| `Alt + R` | Enter Resize Mode (Esc to exit) |
-
-### Tmux
-
-| Binding | Action |
-| :--- | :--- |
-| `Ctrl + A` | Prefix key |
-| `Prefix + |` | Split window horizontally |
-| `Prefix + -` | Split window vertically |
-| `Prefix + H/J/K/L` | Select pane Left/Down/Up/Right |
-| `Prefix + F` | Launch `sesh` session picker |
-| `Prefix + L` | Switch to last session |
-| `Prefix + Tab` | Switch to last window |
-
-### Shell & CLI
-
-| Binding | Action |
-| :--- | :--- |
-| `Ctrl + F` | `sesh` session picker (Zsh) |
-| `Ctrl + R` | `Atuin` history search |
-| `y` | Launch `Yazi` (with CWD sync) |
-| `nv` | Alias for `nvim` |
-| `lg` | Alias for `lazygit` |
-| `c` | Alias for `zoxide` (z) |
-
-### Karabiner (Physical)
-
-- **CapsLock (Hold)**: `Hyper` (Cmd + Opt + Ctrl + Shift)
-- **CapsLock (Tap)**: `Escape`
-
-## Directory Structure
-
-```text
-.
-├── aerospace/    # Aerospace WM config
-├── alacritty/    # Terminal emulator settings
-├── atuin/        # Shell history config
-├── bat/          # bat (cat clone) themes & config
-├── bin/          # Custom scripts (dev command)
-├── dev/          # Dev connection manager config
-├── git/          # Global git config & ignore
-├── karabiner/    # Karabiner-Elements JSON
-├── mise/         # Runtime manager (mise) config
-├── nvim/         # Neovim (LazyVim) setup
-├── scripts/      # Setup scripts (termux, macos, ssh)
-├── sesh/         # Sesh session manager config
-├── ssh/          # SSH client config
-├── tmux/         # Tmux configuration
-├── yazi/         # Yazi file manager config
-└── zsh/          # Zsh aliases, functions, & plugins
-```
-
-## Maintenance Commands
-
-Managed via `Makefile`:
-
-| Command | Description |
-| :--- | :--- |
-| `make install` | Full installation (brew + apps + link + macos) |
-| `make update` | Pull latest changes and reinstall |
-| `make link` | Symlink configurations using `stow` |
-| `make unlink` | Remove symlinks |
-| `make brew` | Install Homebrew formulae |
-| `make apps` | Install GUI applications (Casks) |
-| `make macos` | Apply macOS system defaults |
-
-## Customization
-
-Keep your local changes separate:
-
-- **Zsh**: Add custom settings to `~/.zshrc.local`
-- **P10K**: Configure the prompt in `~/.p10k.zsh`
-- **Git**: Personal identities should go in `~/.gitconfig` or a local include
-
-## Requirements
-
-- **Operating System**: macOS (Intel or Apple Silicon)
-- **Permissions**: Accessibility access for Aerospace and Karabiner-Elements
-
-## Post-Installation
-
-1. **Restart Terminal**: Source your new `.zshrc`.
-2. **Permissions**: Go to `System Settings → Privacy & Security → Accessibility` and enable **Aerospace** and **Karabiner-Elements**.
-3. **Raycast**: Open Raycast and set `Cmd + Space` as the global hotkey.
-4. **Font**: Ensure **JetBrainsMono Nerd Font** is installed (handled by brew).
-5. **Prompt**: Run `p10k configure` if the prompt looks broken.
-
-## Mobile Development (Android/Termux)
-
-Access your Mac dev environment from anywhere using your phone. Full powerhouse setup.
-
-### Stack
-
+### Shell & Terminal
 | Tool | Purpose |
-| :--- | :--- |
-| **Tailscale** | Zero-config VPN mesh (WireGuard) |
-| **Mosh** | Mobile-resilient SSH (survives network switches) |
-| **dev** | fzf-powered connection manager |
-| **Starship** | Minimal, fast prompt for mobile |
-| **Termux:Widget** | Home screen shortcuts for one-tap access |
+|------|---------|
+| **zsh + zinit** | Fast shell with turbo-loaded plugins (~96ms startup) |
+| **Alacritty** | GPU-accelerated terminal with Gruvbox theme |
+| **tmux + sesh** | Terminal multiplexer with session management |
+| **Starship** | Cross-shell prompt (Termux) / p10k (macOS) |
 
-### Setup (Termux)
+### CLI Tools
+| Tool | Replaces |
+|------|----------|
+| `eza` | `ls` |
+| `bat` | `cat` |
+| `fd` | `find` |
+| `rg` | `grep` |
+| `zoxide` | `cd` |
+| `delta` | `diff` |
+| `atuin` | shell history |
+| `yazi` | file manager |
 
-One command installs everything:
+### Neovim (~27ms startup)
+- **Plugin Manager**: lazy.nvim with aggressive lazy-loading
+- **LSP**: mason + lspconfig (auto-install servers)
+- **Completion**: blink.cmp
+- **Fuzzy Finder**: fzf-lua
+- **Git**: gitsigns + fugitive + diffview
+- **Testing**: neotest
+- **Debugging**: nvim-dap
 
+### macOS
+| Tool | Purpose |
+|------|---------|
+| **Aerospace** | Tiling window manager |
+| **Karabiner** | CapsLock → Hyper/Escape |
+| **Raycast** | Spotlight replacement |
+
+### Mobile Development (Termux)
 ```bash
+# One-liner Termux setup
 curl -fsSL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/scripts/termux-setup.sh | bash
 ```
 
-This installs:
-- Modern CLI tools (bat, eza, fd, rg, zoxide, delta)
-- Starship prompt (mobile-optimized)
-- Widget shortcuts for one-tap access
-- Auto-tmux attachment
-- Gruvbox Dark theme
-- JetBrainsMono Nerd Font
+## Structure
 
-### Widget Shortcuts
+```
+~/.dotfiles/
+├── Makefile           # Installation commands
+├── install.sh         # One-liner bootstrap
+├── bootstrap.sh       # Full setup script
+├── scripts/
+│   ├── utils.sh       # Shared utilities
+│   ├── macos.sh       # macOS defaults
+│   └── termux-setup.sh
+├── nvim/.config/nvim/ # Neovim config
+├── zsh/               # Zsh config
+├── tmux/              # Tmux config
+├── git/               # Git config
+├── alacritty/         # Terminal config
+├── aerospace/         # Window manager
+├── karabiner/         # Keyboard remapping
+├── sesh/              # Session manager
+├── yazi/              # File manager
+└── ssh/               # SSH config (template)
+```
 
-Install **Termux:Widget** from F-Droid, then add shortcuts to home screen:
+## Key Bindings
 
-| Shortcut | Action |
-| :--- | :--- |
-| `mac` | Connect to Mac (mosh + tmux) |
-| `shell` | Local tmux session |
-| `sync` | Pull latest dotfiles |
-| `nvim` | Quick neovim |
+### Neovim
 
-Background tasks (no terminal window):
+| Key | Action |
+|-----|--------|
+| `<Space>` | Leader key |
+| `<C-h/j/k/l>` | Window navigation |
+| `<M-h/j/k/l>` | Harpoon slots 1-4 |
+| `<C-e>` | Harpoon menu |
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep |
+| `<leader>e` | Toggle file tree |
+| `gd` | Go to definition |
+| `K` | Hover docs |
+| `<leader>ca` | Code actions |
+| `<leader>mp` | Format |
+| `<leader>gd` | Diffview open |
+| `<leader>q` | Smart quit |
 
-| Task | Action |
-| :--- | :--- |
-| `start-sshd` | Start SSH daemon |
-| `tailscale-status` | Show VPN status notification |
+### tmux
 
-### Quick Commands
+| Key | Action |
+|-----|--------|
+| `C-a` | Prefix |
+| `C-a f` | Session picker (sesh) |
+| `C-a h/j/k/l` | Pane navigation |
+| `C-a v` | Vertical split |
+| `C-a s` | Horizontal split |
 
-| Alias | Action |
-| :--- | :--- |
-| `m` | Connect to Mac |
-| `v` | Neovim |
-| `ta` | Attach/create tmux |
-| `lg` | Lazygit |
-| `clip` | Copy to clipboard |
-| `paste` | Paste from clipboard |
-| `notify` | Send notification |
+### Aerospace
 
-### Setup (Mac - Enable SSH)
+| Key | Action |
+|-----|--------|
+| `Alt-h/j/k/l` | Focus window |
+| `Alt-Shift-h/j/k/l` | Move window |
+| `Alt-1/2/3/4` | Switch workspace |
+
+### Karabiner
+
+| Key | Action |
+|-----|--------|
+| `CapsLock` (tap) | Escape |
+| `CapsLock` (hold) | Hyper (Ctrl+Alt+Cmd+Shift) |
+
+## Customization
+
+Machine-specific configs go in `.local` files (gitignored):
 
 ```bash
-# Enable Remote Login
-sudo systemsetup -setremotelogin on
-
-# Run hardening guide
-./scripts/mac-ssh-harden.sh
+# Copy examples and customize
+cp git/.gitconfig.local.example ~/.gitconfig.local
+cp zsh/.zshrc.local.example ~/.zshrc.local
+cp ssh/.ssh/config.local.example ~/.ssh/config.local
 ```
 
-### Usage
+## Make Commands
 
 ```bash
-# Interactive picker
-dev
-
-# Direct connect
-dev mac-home
-
-# Edit hosts
-dev --edit
+make install   # Full installation
+make link      # Symlink configs only
+make unlink    # Remove symlinks
+make update    # Update everything
+make brew      # Install Homebrew packages
+make apps      # Install GUI apps
+make macos     # Apply macOS defaults
+make clean     # Remove broken symlinks
 ```
 
-### Host Configuration
+## Requirements
 
-Edit `~/.config/dev/hosts.toml`:
+- macOS 13+ (Ventura or later)
+- Xcode Command Line Tools
+- ~2GB disk space
 
-```toml
-[hosts.mac-home]
-host = "100.x.x.x"  # Tailscale IP
-user = "your-username"
-desc = "MacBook via Tailscale"
-mosh = true
-```
+## Performance
 
-### Workflow
+| Metric | Time |
+|--------|------|
+| Shell startup | ~96ms |
+| Neovim startup | ~27ms |
 
-1. Install **Tailscale** on both Mac and Android (Play Store)
-2. Login to same Tailscale account
-3. Get Mac's Tailscale IP: `tailscale ip -4`
-4. Add to `hosts.toml`
-5. Copy SSH key: `ssh-copy-id user@100.x.x.x`
-6. Run `dev` → pick session → you're in
+## License
 
-### Bidirectional: Mac → Android
-
-You can also SSH from Mac into your Android:
-
-**On Termux (Android):**
-```bash
-pkg install openssh -y
-sshd                           # Start SSH server
-whoami                         # Note your username (e.g., u0_a521)
-
-# Add Mac's public key
-mkdir -p ~/.ssh && chmod 700 ~/.ssh
-echo "YOUR_MAC_PUBLIC_KEY" >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-
-# Auto-start sshd (optional)
-sv-enable sshd
-```
-
-**On Mac, add to `~/.config/dev/hosts.toml`:**
-```toml
-[hosts.android]
-host = "100.x.x.x"    # Android's Tailscale IP
-user = "u0_aXXX"      # From 'whoami' in Termux
-port = 8022
-desc = "Android via Tailscale"
-mosh = false
-```
-
-Then: `dev android`
-
-### Troubleshooting
-
-| Issue | Fix |
-| :--- | :--- |
-| Tailscale not connecting | Disable battery optimization for Tailscale on Android |
-| SSH permission denied | Check `~/.ssh/authorized_keys` permissions (600) |
-| Mosh not found | Install mosh: `brew install mosh` (Mac) or `pkg install mosh` (Termux) |
-| sshd not running | Run `sshd` in Termux, or `sv-enable sshd` for auto-start |
+MIT

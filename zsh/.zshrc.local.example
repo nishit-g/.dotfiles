@@ -1,0 +1,17 @@
+# Machine-specific zsh config (not tracked in git)
+# Copy to ~/.zshrc.local and customize
+
+# Work-specific aliases
+alias vpn="networksetup -connectpppoeservice 'Work VPN'"
+
+# Machine-specific paths
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+
+# API keys (NEVER commit these)
+export OPENAI_API_KEY="sk-..."
+export GITHUB_TOKEN="ghp_..."
+
+# Work proxies
+# export HTTP_PROXY="http://proxy.work.com:8080"
+# export HTTPS_PROXY="http://proxy.work.com:8080"

@@ -10,8 +10,23 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 map("i", "jj", "<Esc>", opts)
 
 map("n", "<leader>w", "<cmd>w<CR>", opts)
-map("n", "<leader>q", "<cmd>q<CR>", opts)
-map("n", "<leader>Q", "<cmd>qa!<CR>", opts)
+
+-- Smart quit (close buffer if multiple, quit if last)
+map("n", "<leader>q", function()
+  local buf_count = #vim.fn.getbufinfo({ buflisted = 1 })
+  if buf_count > 1 then
+    local ok, bufremove = pcall(require, "mini.bufremove")
+    if ok then
+      bufremove.delete(0, false)
+    else
+      vim.cmd("bdelete")
+    end
+  else
+    vim.cmd("quit")
+  end
+end, { desc = "Smart quit" })
+
+map("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Force quit all" })
 
 map("n", "Y", "y$", opts)
 
@@ -44,15 +59,6 @@ map({ "n", "v" }, "<leader>d", [["_d]], opts)
 map("n", "<leader>rn", function()
   return ":IncRename " .. vim.fn.expand("<cword>")
 end, { expr = true, desc = "Rename (IncRename)" })
-
--- Harpoon
-map("n", "<leader>a", function() require("harpoon"):list():add() end, { desc = "Harpoon Add" })
-map("n", "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, { desc = "Harpoon Menu" })
-
-map("n", "<A-h>", function() require("harpoon"):list():select(1) end, { desc = "Harpoon 1" })
-map("n", "<A-j>", function() require("harpoon"):list():select(2) end, { desc = "Harpoon 2" })
-map("n", "<A-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
-map("n", "<A-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
 
 -----------------------------------------------------------------------
 -- Windows & splits

@@ -7,7 +7,6 @@ source "$DOTFILES_DIR/scripts/utils.sh"
 readonly BREW_TAPS=(
   joshmedeski/sesh
   nikitabobko/tap
-  homebrew/cask-fonts
 )
 
 readonly BREW_FORMULAE=(
