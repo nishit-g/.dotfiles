@@ -18,9 +18,9 @@ return {
           icons = {
             glyphs = {
               git = {
-                unstaged = "",
-                staged = "",
-                untracked = "",
+                unstaged = "",
+                staged = "",
+                untracked = "",
               },
             },
           },
@@ -29,6 +29,7 @@ return {
         git = { enable = true },
       })
       vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
+      vim.keymap.set("n", "<leader>E", "<cmd>NvimTreeFocus<CR>", { desc = "Focus NvimTree" })
     end,
   },
 

@@ -57,11 +57,22 @@ map("n", "<C-l>", function() require("harpoon"):list():select(4) end, { desc = "
 -----------------------------------------------------------------------
 -- Windows & splits
 -----------------------------------------------------------------------
+-- Window navigation (Alt + h/j/k/l since C-h/j/k/l is Harpoon)
+map("n", "<A-h>", "<C-w>h", { desc = "Window Left" })
+map("n", "<A-j>", "<C-w>j", { desc = "Window Down" })
+map("n", "<A-k>", "<C-w>k", { desc = "Window Up" })
+map("n", "<A-l>", "<C-w>l", { desc = "Window Right" })
+
+-- Window management
 map("n", "<leader>w-", "<C-w>s", { desc = "Split Horizontal" })
 map("n", "<leader>w|", "<C-w>v", { desc = "Split Vertical" })
 map("n", "<leader>wd", "<C-w>c", { desc = "Close Window" })
 map("n", "<leader>ww", "<C-w>w", { desc = "Other Window" })
 map("n", "<leader>wo", "<C-w>o", { desc = "Close Other Windows" })
+map("n", "<leader>wh", "<C-w>h", { desc = "Window Left" })
+map("n", "<leader>wj", "<C-w>j", { desc = "Window Down" })
+map("n", "<leader>wk", "<C-w>k", { desc = "Window Up" })
+map("n", "<leader>wl", "<C-w>l", { desc = "Window Right" })
 
 map("n", "<C-Up>", "<cmd>resize -2<CR>", opts)
 map("n", "<C-Down>", "<cmd>resize +2<CR>", opts)

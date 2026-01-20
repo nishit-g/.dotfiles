@@ -57,7 +57,6 @@ return {
           map("n", "gi", vim.lsp.buf.implementation, "Goto implementation")
           map("n", "gr", vim.lsp.buf.references, "Goto references")
           map("n", "K", vim.lsp.buf.hover, "Hover")
-          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
         end,
       })
