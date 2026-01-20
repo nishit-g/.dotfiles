@@ -16,8 +16,10 @@ tab_size = 2
 max_width = 2000
 max_height = 1200
 image_filter = "lanczos3"
-image_quality = 80
-image_delay = 50
+image_quality = 90
+sixel_fraction = 15
+ueberzug_scale = 1
+ueberzug_offset = [0, 0, 0, 0]
 cache_dir = ""
 
 [opener]

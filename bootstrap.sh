@@ -15,7 +15,7 @@ readonly BREW_FORMULAE=(
   fzf ripgrep fd eza zoxide bat
   lazygit gh jq yq
   sesh mise atuin git-delta
-  yazi ffmpegthumbnailer poppler
+  yazi ffmpegthumbnailer poppler unar imagemagick
   direnv tldr hyperfine ugrep
 )
 
