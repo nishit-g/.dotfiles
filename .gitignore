@@ -1,7 +1,29 @@
-# macOS
 .DS_Store
-
-# local overrides (not tracked)
 *.local
 .zshrc.local
 .gitconfig.local
+
+*.zwc
+*.zwc.old
+.zcompdump*
+.zsh_history
+.zsh_sessions/
+
+*.log
+*.tmp
+*.bak
+*.backup.*
+*.swp
+*.swo
+*~
+
+.netrwhist
+.nvimlog
+
+.envrc
+.direnv/
+
+node_modules/
+__pycache__/
+*.pyc
+.venv/
