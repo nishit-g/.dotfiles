@@ -49,19 +49,18 @@ end, { expr = true, desc = "Rename (IncRename)" })
 map("n", "<leader>a", function() require("harpoon"):list():add() end, { desc = "Harpoon Add" })
 map("n", "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, { desc = "Harpoon Menu" })
 
-map("n", "<C-h>", function() require("harpoon"):list():select(1) end, { desc = "Harpoon 1" })
-map("n", "<C-j>", function() require("harpoon"):list():select(2) end, { desc = "Harpoon 2" })
-map("n", "<C-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
-map("n", "<C-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
+map("n", "<A-h>", function() require("harpoon"):list():select(1) end, { desc = "Harpoon 1" })
+map("n", "<A-j>", function() require("harpoon"):list():select(2) end, { desc = "Harpoon 2" })
+map("n", "<A-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
+map("n", "<A-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
 
 -----------------------------------------------------------------------
 -- Windows & splits
 -----------------------------------------------------------------------
--- Window navigation (Alt + h/j/k/l since C-h/j/k/l is Harpoon)
-map("n", "<A-h>", "<C-w>h", { desc = "Window Left" })
-map("n", "<A-j>", "<C-w>j", { desc = "Window Down" })
-map("n", "<A-k>", "<C-w>k", { desc = "Window Up" })
-map("n", "<A-l>", "<C-w>l", { desc = "Window Right" })
+map("n", "<C-h>", "<C-w>h", { desc = "Window Left" })
+map("n", "<C-j>", "<C-w>j", { desc = "Window Down" })
+map("n", "<C-k>", "<C-w>k", { desc = "Window Up" })
+map("n", "<C-l>", "<C-w>l", { desc = "Window Right" })
 
 -- Window management
 map("n", "<leader>w-", "<C-w>s", { desc = "Split Horizontal" })
