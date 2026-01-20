@@ -30,7 +30,7 @@ readonly BREW_CASKS=(
 readonly STOW_PACKAGES=(
   nvim zsh tmux alacritty git
   sesh atuin yazi bat mise
-  aerospace karabiner dev bin
+  aerospace karabiner dev bin ssh
 )
 
 install_homebrew() {

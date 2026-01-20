@@ -14,7 +14,8 @@ info "Updating packages..."
 pkg update -y && pkg upgrade -y
 
 info "Installing core tools..."
-pkg install -y openssh mosh git fzf tmux neovim zsh curl wget
+pkg install -y openssh mosh git fzf tmux neovim zsh curl wget \
+    bat eza fd ripgrep zoxide git-delta
 
 info "Setting up storage access..."
 termux-setup-storage || true

@@ -56,17 +56,27 @@ connect() {
     IFS='|' read -r _ host user port use_mosh _ <<< "$line"
     info "Connecting to $user@$host..."
     
-    # Remote tmux command with PATH fix
-    local tmux_cmd='export PATH="/opt/homebrew/bin:$PATH"; tmux new -As main'
+    # Remote command: try homebrew paths first, then system
+    local remote_cmd='PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; tmux new -As main'
     
     if [[ "$use_mosh" == "true" ]] && command -v mosh >/dev/null 2>&1; then
-        if [[ "$port" != "22" ]]; then
-            mosh --server=/opt/homebrew/bin/mosh-server --ssh="ssh -p $port" "$user@$host" -- bash -lc "$tmux_cmd"
+        # Find local mosh-server path (works on both Intel and Apple Silicon)
+        local mosh_server
+        if [[ -x /opt/homebrew/bin/mosh-server ]]; then
+            mosh_server="/opt/homebrew/bin/mosh-server"
+        elif [[ -x /usr/local/bin/mosh-server ]]; then
+            mosh_server="/usr/local/bin/mosh-server"
         else
-            mosh --server=/opt/homebrew/bin/mosh-server "$user@$host" -- bash -lc "$tmux_cmd"
+            mosh_server="mosh-server"
+        fi
+        
+        if [[ "$port" != "22" ]]; then
+            mosh --server="$mosh_server" --ssh="ssh -p $port" "$user@$host" -- bash -lc "$remote_cmd"
+        else
+            mosh --server="$mosh_server" "$user@$host" -- bash -lc "$remote_cmd"
         fi
     else
-        ssh -t -p "$port" "$user@$host" "$tmux_cmd"
+        ssh -t -p "$port" "$user@$host" "$remote_cmd"
     fi
 }
 
