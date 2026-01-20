@@ -83,6 +83,15 @@ map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", opts)
 -----------------------------------------------------------------------
 map("n", "<S-l>", "<cmd>bnext<CR>", opts)
 map("n", "<S-h>", "<cmd>bprevious<CR>", opts)
+map("n", "<leader><Tab>", "<cmd>e #<CR>", { desc = "Switch to last buffer" })
+map("n", "<C-x>", function()
+  local ok, bufremove = pcall(require, "mini.bufremove")
+  if ok then
+    bufremove.delete(0, false)
+  else
+    vim.cmd("bdelete")
+  end
+end, { silent = true, desc = "Close buffer" })
 
 map("n", "<leader>bd", function()
   local ok, bufremove = pcall(require, "mini.bufremove")
@@ -113,6 +122,21 @@ map("n", "<leader>fh", function() require("fzf-lua").help_tags() end,
 map("n", "<leader>fr", function() require("fzf-lua").oldfiles() end,
   { silent = true, desc = "Recent files" })
 
+map("n", "<leader>fk", function() require("fzf-lua").keymaps() end,
+  { silent = true, desc = "Keymaps" })
+
+map("n", "<leader>fc", function() require("fzf-lua").commands() end,
+  { silent = true, desc = "Commands" })
+
+map("n", "<leader>fw", function() require("fzf-lua").grep_cword() end,
+  { silent = true, desc = "Grep word under cursor" })
+
+map("n", "<leader>gc", function() require("fzf-lua").git_commits() end,
+  { silent = true, desc = "Git commits" })
+
+map("n", "<leader>gC", function() require("fzf-lua").git_bcommits() end,
+  { silent = true, desc = "Git buffer commits" })
+
 -----------------------------------------------------------------------
 -- Diagnostics
 -----------------------------------------------------------------------
@@ -121,13 +145,17 @@ map("n", "]d", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnosti
 map("n", "<leader>ld", vim.diagnostic.open_float, { silent = true, desc = "Line diagnostics" })
 map("n", "<leader>lq", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics loclist" })
 
------------------------------------------------------------------------
--- Git: gitsigns toggle + fugitive
------------------------------------------------------------------------
-map("n", "<leader>ht", function()
-  require("gitsigns").toggle_signs()
-end, { silent = true, desc = "Toggle git signs" })
+map("n", "[q", "<cmd>cprev<CR>zz", { silent = true, desc = "Prev quickfix" })
+map("n", "]q", "<cmd>cnext<CR>zz", { silent = true, desc = "Next quickfix" })
+map("n", "[l", "<cmd>lprev<CR>zz", { silent = true, desc = "Prev loclist" })
+map("n", "]l", "<cmd>lnext<CR>zz", { silent = true, desc = "Next loclist" })
 
+map("n", "[t", function() require("todo-comments").jump_prev() end, { silent = true, desc = "Prev todo" })
+map("n", "]t", function() require("todo-comments").jump_next() end, { silent = true, desc = "Next todo" })
+
+-----------------------------------------------------------------------
+-- Git: fugitive
+-----------------------------------------------------------------------
 map("n", "<leader>gs", "<cmd>Git<CR>", { silent = true, desc = "Git status" })
 map("n", "<leader>gb", "<cmd>Git blame<CR>", { silent = true, desc = "Git blame" })
 map("n", "<leader>gl", "<cmd>Git log<CR>", { silent = true, desc = "Git log" })
@@ -145,6 +173,10 @@ map("n", "<leader>ml", function()
     vim.notify("nvim-lint not available", vim.log.levels.WARN)
   end
 end, { silent = true, desc = "Run linter" })
+
+map("n", "<leader>sn", function()
+  require("noice").cmd("dismiss")
+end, { silent = true, desc = "Dismiss notifications" })
 
 -----------------------------------------------------------------------
 -- Code outline: aerial.nvim

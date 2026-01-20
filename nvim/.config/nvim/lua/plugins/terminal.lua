@@ -31,7 +31,10 @@ return {
         local topts = { buffer = 0 }
         vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], topts)
         vim.keymap.set("t", "jk", [[<C-\><C-n>]], topts)
-        vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], topts)
+        vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], topts)
+        vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], topts)
+        vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], topts)
+        vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], topts)
       end
 
       vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")

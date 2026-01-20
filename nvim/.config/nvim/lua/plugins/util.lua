@@ -29,8 +29,11 @@ return {
         { "<leader>l", group = "lsp" },
         { "<leader>m", group = "meta" },
         { "<leader>q", group = "session/quit" },
+        { "<leader>r", group = "rename" },
+        { "<leader>s", group = "search/notify" },
         { "<leader>t", group = "test" },
         { "<leader>w", group = "windows" },
+        { "<leader>x", group = "diagnostics" },
       })
     end,
   },
