@@ -74,11 +74,14 @@ for cask in "${BREW_CASKS[@]}"; do
   fi
 done
 
-if [[ -x "${BREW_PREFIX}/opt/fzf/install" ]]; then
-  echo "▶ Enabling fzf key bindings..."
-  yes | "${BREW_PREFIX}/opt/fzf/install" --no-bash --no-fish --key-bindings --completion
+echo "▶ Installing zinit (zsh plugin manager)..."
+ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+  echo "✔ zinit installed."
 else
-  echo "▶ Skipping fzf key bindings (installer not found)."
+  echo "  • zinit already installed."
 fi
 
 echo "▶ Linking dotfiles with stow..."
@@ -104,22 +107,23 @@ STOW_DIRS=(
 for dir in "${STOW_DIRS[@]}"; do
   if [[ -d "${dir}" ]]; then
     echo "  • Stowing ${dir}"
-    stow "${dir}"
+    stow --restow "${dir}"
   else
     echo "  • Skipping ${dir} (directory not found in dotfiles)."
   fi
 done
 
 echo ""
+echo "▶ Cleanup (run manually if needed):"
+echo "  rm -rf ~/.antidote ~/.asdf ~/.tool-versions"
+echo ""
 echo "▶ Post-install steps:"
 echo "  1. Set zsh as default shell:"
 echo "       chsh -s \"\$(command -v zsh)\""
-echo "  2. Import shell history to atuin:"
-echo "       atuin import auto"
-echo "  3. Install default tools with mise:"
-echo "       mise install"
-echo "  4. Restart your terminal"
-echo "  5. First Neovim run: open 'nvim' and run ':Lazy sync'"
+echo "  2. Restart terminal (zinit will auto-install plugins)"
+echo "  3. Run 'p10k configure' if prompt looks broken"
+echo "  4. Import shell history: atuin import auto"
+echo "  5. First Neovim run: nvim, then :Lazy sync"
 
 echo ""
 echo "✔ macOS bootstrap complete."
