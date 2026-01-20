@@ -107,7 +107,7 @@ return {
         bottom_search = true,
         command_palette = true,
         long_message_to_split = true,
-        inc_rename = false,
+        inc_rename = true,
         lsp_doc_border = false,
       },
     },
@@ -138,14 +138,14 @@ return {
         config = {
           header = vim.split(logo, "\n"),
           center = {
-            { action = "Telescope find_files", desc = " Find File", icon = " ", key = "f" },
-            { action = "ene | startinsert", desc = " New File", icon = " ", key = "n" },
-            { action = "Telescope oldfiles", desc = " Recent Files", icon = " ", key = "r" },
-            { action = "Telescope live_grep", desc = " Find Text", icon = " ", key = "g" },
-            { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
-            { action = 'require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
+            { action = "FzfLua files", desc = " Find File", icon = " ", key = "f" },
+            { action = "ene | startinsert", desc = " New File", icon = " ", key = "n" },
+            { action = "FzfLua oldfiles", desc = " Recent Files", icon = " ", key = "r" },
+            { action = "FzfLua live_grep", desc = " Find Text", icon = " ", key = "g" },
+            { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
+            { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
             { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },
-            { action = "qa", desc = " Quit", icon = " ", key = "q" },
+            { action = "qa", desc = " Quit", icon = " ", key = "q" },
           },
           footer = function()
             local stats = require("lazy").stats()

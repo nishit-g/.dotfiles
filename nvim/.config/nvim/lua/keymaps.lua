@@ -4,12 +4,6 @@ local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
 -----------------------------------------------------------------------
--- Leader
------------------------------------------------------------------------
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
------------------------------------------------------------------------
 -- General editing
 -----------------------------------------------------------------------
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
@@ -46,7 +40,7 @@ map("n", "<leader>Y", [["+Y]], opts)
 -- Delete to void register
 map({ "n", "v" }, "<leader>d", [["_d]], opts)
 
--- Inc-Rename
+-- Inc-Rename (uses noice integration)
 map("n", "<leader>rn", function()
   return ":IncRename " .. vim.fn.expand("<cword>")
 end, { expr = true, desc = "Rename (IncRename)" })
@@ -60,36 +54,19 @@ map("n", "<C-j>", function() require("harpoon"):list():select(2) end, { desc = "
 map("n", "<C-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
 map("n", "<C-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
 
--- Toggle previous & next buffers (overrides default C-h/j/k/l window nav if you prefer Harpoon there)
--- NOTE: We are overwriting window navigation <C-h/j/k/l> with Harpoon.
--- You can use <leader>w + h/j/k/l or just <C-w> + h/j/k/l for windows.
-
 -----------------------------------------------------------------------
 -- Windows & splits
 -----------------------------------------------------------------------
--- Windows & splits (remapped to avoid conflict with Harpoon if desired, or keep as is)
--- map("n", "<C-h>", "<C-w>h", opts) -- Conflict with Harpoon
--- map("n", "<C-j>", "<C-w>j", opts) -- Conflict with Harpoon
--- map("n", "<C-k>", "<C-w>k", opts) -- Conflict with Harpoon
--- map("n", "<C-l>", "<C-w>l", opts) -- Conflict with Harpoon
-
--- Window Management
 map("n", "<leader>w-", "<C-w>s", { desc = "Split Horizontal" })
 map("n", "<leader>w|", "<C-w>v", { desc = "Split Vertical" })
 map("n", "<leader>wd", "<C-w>c", { desc = "Close Window" })
 map("n", "<leader>ww", "<C-w>w", { desc = "Other Window" })
 map("n", "<leader>wo", "<C-w>o", { desc = "Close Other Windows" })
--- Also keep these for backward compatibility if you like
-map("n", "<leader>sh", "<C-w>s", { desc = "Split Horizontal" })
-map("n", "<leader>sv", "<C-w>v", { desc = "Split Vertical" })
 
 map("n", "<C-Up>", "<cmd>resize -2<CR>", opts)
 map("n", "<C-Down>", "<cmd>resize +2<CR>", opts)
 map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", opts)
 map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", opts)
-
-map("n", "<leader>sv", "<cmd>vsplit<CR>", opts)
-map("n", "<leader>sh", "<cmd>split<CR>", opts)
 
 -----------------------------------------------------------------------
 -- Buffers (with bufferline + mini.bufremove)
@@ -135,22 +112,6 @@ map("n", "<leader>ld", vim.diagnostic.open_float, { silent = true, desc = "Line 
 map("n", "<leader>lq", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics loclist" })
 
 -----------------------------------------------------------------------
--- LSP (generic; on_attach adds buffer-local too)
------------------------------------------------------------------------
-map("n", "gd", vim.lsp.buf.definition, { silent = true, desc = "Goto definition" })
-map("n", "gD", vim.lsp.buf.declaration, { silent = true, desc = "Goto declaration" })
-map("n", "gi", vim.lsp.buf.implementation, { silent = true, desc = "Goto implementation" })
-map("n", "gr", vim.lsp.buf.references, { silent = true, desc = "Goto references" })
-map("n", "K", vim.lsp.buf.hover, { silent = true, desc = "Hover" })
-
-map("n", "<leader>rn", vim.lsp.buf.rename, { silent = true, desc = "Rename symbol" })
-map("n", "<leader>ca", vim.lsp.buf.code_action, { silent = true, desc = "Code action" })
-
-map("n", "<leader>lf", function()
-  vim.lsp.buf.format({ async = true })
-end, { silent = true, desc = "LSP format" })
-
------------------------------------------------------------------------
 -- Git: gitsigns toggle + fugitive
 -----------------------------------------------------------------------
 map("n", "<leader>ht", function()
@@ -174,7 +135,6 @@ map("n", "<leader>ml", function()
     vim.notify("nvim-lint not available", vim.log.levels.WARN)
   end
 end, { silent = true, desc = "Run linter" })
--- NOTE: <leader>mp is defined in conform.nvim config.
 
 -----------------------------------------------------------------------
 -- Code outline: aerial.nvim
@@ -221,8 +181,3 @@ map("n", "<leader>pr", function()
     vim.notify("Not a git repo", vim.log.levels.WARN)
   end
 end, { silent = true, desc = "cd to project root (git)" })
-
------------------------------------------------------------------------
--- (Optional) Tmux integration – keep commented until you want it
------------------------------------------------------------------------
--- map("n", "<leader><C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", opts)
