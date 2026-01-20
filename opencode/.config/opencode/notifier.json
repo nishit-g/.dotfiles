@@ -1,0 +1,39 @@
+{
+  "ntfy": {
+    "enabled": true,
+    "server": "https://ntfy.sh",
+    "topic": "chaosmonk-oc",
+    "auth": {
+      "enabled": false,
+      "username": "",
+      "password": ""
+    },
+    "priority": {
+      "complete": 3,
+      "error": 5,
+      "permission": 4,
+      "question": 4
+    }
+  },
+  "local": {
+    "enabled": true,
+    "sounds": true
+  },
+  "rateLimit": {
+    "enabled": true,
+    "minInterval": 5000
+  },
+  "logging": {
+    "enabled": true
+  },
+  "focusMode": {
+    "enabled": false,
+    "start": 22,
+    "end": 8
+  },
+  "webhook": {
+    "enabled": false,
+    "url": "",
+    "onlyErrors": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "ntfy": {
+    "topic": "your-secret-topic-here",
+    "auth": {
+      "enabled": true,
+      "username": "your-ntfy-username",
+      "password": "your-ntfy-password"
+    }
+  },
+  "webhook": {
+    "enabled": true,
+    "url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+  }
+}

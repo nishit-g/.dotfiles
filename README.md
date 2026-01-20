@@ -1,6 +1,6 @@
 # dotfiles
 
-> ChaosMonk's development environment. macOS + Neovim + tmux + zsh.
+> ChaosMonk's development environment. macOS + Neovim + tmux + zsh + OpenCode.
 
 ## Quick Start
 
@@ -44,6 +44,13 @@ cd ~/.dotfiles && make install
 - **Testing**: neotest
 - **Debugging**: nvim-dap
 
+### OpenCode (AI Coding Assistant)
+- **Agent Framework**: oh-my-opencode with Sisyphus agent
+- **Sub-agents**: Oracle, Librarian, Explore, Frontend
+- **Models**: Claude, GPT-5, Gemini (configurable)
+- **Notifications**: Desktop + mobile (ntfy.sh) + webhook support
+- **Custom Plugin**: ChaosMonk notifier with session stats
+
 ### macOS
 | Tool | Purpose |
 |------|---------|
@@ -69,6 +76,12 @@ curl -fsSL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/scripts/termu
 │   ├── macos.sh       # macOS defaults
 │   └── termux-setup.sh
 ├── nvim/.config/nvim/ # Neovim config
+├── opencode/.config/opencode/
+│   ├── opencode.json        # Main config
+│   ├── oh-my-opencode.json  # Agent config
+│   ├── notifier.json        # Notification settings
+│   ├── skill/               # Custom AI skills
+│   └── plugin/              # Custom plugins
 ├── zsh/               # Zsh config
 ├── tmux/              # Tmux config
 ├── git/               # Git config
@@ -134,7 +147,54 @@ Machine-specific configs go in `.local` files (gitignored):
 cp git/.gitconfig.local.example ~/.gitconfig.local
 cp zsh/.zshrc.local.example ~/.zshrc.local
 cp ssh/.ssh/config.local.example ~/.ssh/config.local
+cp opencode/.config/opencode/notifier.local.json.example ~/.config/opencode/notifier.local.json
 ```
+
+## OpenCode Setup
+
+After installation, OpenCode requires additional setup:
+
+### 1. Install OpenCode
+```bash
+# Via bun (recommended)
+bunx opencode
+
+# Or npm
+npx opencode
+```
+
+### 2. Authenticate providers
+```bash
+# The config expects these auth files (not tracked in git):
+# ~/.config/opencode/antigravity-accounts.json  (Antigravity OAuth)
+```
+
+### 3. Mobile notifications (optional)
+Install [ntfy](https://ntfy.sh) app and subscribe to your topic:
+```bash
+# Default topic (change in notifier.local.json for security)
+Topic: chaosmonk-oc
+
+# For private notifications, set auth in notifier.local.json:
+{
+  "ntfy": {
+    "topic": "your-secret-topic",
+    "auth": {
+      "enabled": true,
+      "username": "your-username",
+      "password": "your-password"
+    }
+  }
+}
+```
+
+### 4. Notification events
+| Event | Notification |
+|-------|--------------|
+| Session complete | ✅ Project + duration + stats |
+| Error | ❌ Error message |
+| Permission needed | ⚠️ Tool requesting permission |
+| Question (>30s) | ❓ AI has a question |
 
 ## Make Commands
 
@@ -161,6 +221,30 @@ make clean     # Remove broken symlinks
 |--------|------|
 | Shell startup | ~96ms |
 | Neovim startup | ~27ms |
+
+## The Stack
+
+```
+Phone (Termux) ──► Tailscale VPN ──► Mac
+                        │
+                        ▼
+              ┌─────────────────┐
+              │  Alacritty      │
+              │  (96ms zsh)     │
+              └────────┬────────┘
+                       │
+              ┌────────▼────────┐
+              │  tmux + sesh    │
+              └────────┬────────┘
+                       │
+         ┌─────────────┴─────────────┐
+         │                           │
+         ▼                           ▼
+   ┌──────────┐               ┌──────────┐
+   │  Neovim  │◄─────────────►│ OpenCode │
+   │  (27ms)  │               │   (AI)   │
+   └──────────┘               └──────────┘
+```
 
 ## License
 

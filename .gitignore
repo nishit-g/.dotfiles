@@ -27,3 +27,9 @@ node_modules/
 __pycache__/
 *.pyc
 .venv/
+
+# OpenCode sensitive files
+opencode/.config/opencode/antigravity-accounts.json
+opencode/.config/opencode/*-auth.json
+opencode/.config/opencode/*.local.json
+opencode/.config/opencode/secrets/
