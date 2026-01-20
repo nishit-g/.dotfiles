@@ -79,23 +79,26 @@ function y() {
   rm -f -- "$tmp"
 }
 
-if [[ -n "$TMUX" ]] || [[ -z "$SSH_CONNECTION" ]]; then
-  function sesh-sessions() {
-    exec </dev/tty
-    exec <&1
-    local session
-    session=$(sesh list -i | fzf --height 40% --reverse --border --prompt '⚡ ' \
-      --header '  ^a all ^t tmux ^x zoxide ^d kill' \
-      --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list -i)' \
-      --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t)' \
-      --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z)' \
-      --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡ )+reload(sesh list -i)')
-    [[ -z "$session" ]] && return
-    sesh connect "$session"
-  }
-  zle -N sesh-sessions
-  bindkey '^f' sesh-sessions
-fi
+function sesh-sessions() {
+  local session
+  session=$(sesh list -i | fzf --ansi --no-sort --border --prompt '⚡ ' \
+    --header '  ^a all ^t tmux ^x zoxide ^d kill' \
+    --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list -i)' \
+    --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t)' \
+    --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z)' \
+    --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡ )+reload(sesh list -i)' </dev/tty)
+  zle reset-prompt
+  [[ -z "$session" ]] && return
+  zle -I
+  if [[ -n "$TMUX" ]]; then
+    sesh connect --switch "$session"
+  else
+    BUFFER="sesh connect \"$session\""
+    zle accept-line
+  fi
+}
+zle -N sesh-sessions
+bindkey '^f' sesh-sessions
 
 bindkey -e
 REPORTTIME=5

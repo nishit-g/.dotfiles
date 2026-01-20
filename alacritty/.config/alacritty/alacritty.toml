@@ -1,8 +1,14 @@
+[general]
+live_config_reload = true
+working_directory = "None"
+
 [window]
-padding = { x = 8, y = 8 }
-decorations = "full"
-opacity = 0.96
+padding = { x = 12, y = 12 }
+decorations = "Buttonless"
+opacity = 0.95
+blur = true
 dynamic_title = true
+option_as_alt = "Both"
 
 [font]
 size = 14.0
@@ -19,34 +25,139 @@ style = "Bold"
 family = "JetBrainsMono Nerd Font"
 style = "Italic"
 
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Bold Italic"
+
 [cursor]
-style = "Beam"
+style = { shape = "Beam", blinking = "On" }
+blink_interval = 500
+blink_timeout = 0
+unfocused_hollow = true
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = true
 
 [scrolling]
-history = 10000
+history = 50000
 multiplier = 3
 
+[bell]
+duration = 0
+
 [colors.primary]
-background = "0x0f1419"
-foreground = "0xd8dee9"
+background = "#1d2021"
+foreground = "#ebdbb2"
+bright_foreground = "#fbf1c7"
+dim_foreground = "#a89984"
+
+[colors.cursor]
+text = "#1d2021"
+cursor = "#ebdbb2"
+
+[colors.vi_mode_cursor]
+text = "#1d2021"
+cursor = "#b8bb26"
+
+[colors.selection]
+text = "CellForeground"
+background = "#504945"
+
+[colors.search.matches]
+foreground = "#1d2021"
+background = "#fabd2f"
+
+[colors.search.focused_match]
+foreground = "#1d2021"
+background = "#fe8019"
+
+[colors.hints.start]
+foreground = "#1d2021"
+background = "#fabd2f"
+
+[colors.hints.end]
+foreground = "#1d2021"
+background = "#83a598"
 
 [colors.normal]
-black   = "0x1e222a"
-red     = "0xec5f67"
-green   = "0x99c794"
-yellow  = "0xfac863"
-blue    = "0x6699cc"
-magenta = "0xc594c5"
-cyan    = "0x5fb3b3"
-white   = "0xd8dee9"
+black   = "#1d2021"
+red     = "#fb4934"
+green   = "#b8bb26"
+yellow  = "#fabd2f"
+blue    = "#83a598"
+magenta = "#d3869b"
+cyan    = "#8ec07c"
+white   = "#ebdbb2"
 
 [colors.bright]
-black   = "0x4b5263"
-red     = "0xff6973"
-green   = "0xb3e1a3"
-yellow  = "0xffd580"
-blue    = "0x75c2ff"
-magenta = "0xd4a5ff"
-cyan    = "0x5fd7ff"
-white   = "0xffffff"
+black   = "#665c54"
+red     = "#fb4934"
+green   = "#b8bb26"
+yellow  = "#fabd2f"
+blue    = "#83a598"
+magenta = "#d3869b"
+cyan    = "#8ec07c"
+white   = "#fbf1c7"
 
+[colors.dim]
+black   = "#1d2021"
+red     = "#cc241d"
+green   = "#98971a"
+yellow  = "#d79921"
+blue    = "#458588"
+magenta = "#b16286"
+cyan    = "#689d6a"
+white   = "#a89984"
+
+[[keyboard.bindings]]
+key = "N"
+mods = "Command"
+action = "SpawnNewInstance"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Command"
+action = "ClearHistory"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Command|Shift"
+action = "ToggleSimpleFullscreen"
+
+[[keyboard.bindings]]
+key = "Plus"
+mods = "Command"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Minus"
+mods = "Command"
+action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Key0"
+mods = "Command"
+action = "ResetFontSize"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Command"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Command"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "H"
+mods = "Command"
+action = "Hide"
+
+[[keyboard.bindings]]
+key = "Q"
+mods = "Command"
+action = "Quit"

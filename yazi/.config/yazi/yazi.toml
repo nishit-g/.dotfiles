@@ -1,40 +1,30 @@
-# yazi configuration
-# https://yazi-rs.github.io/docs/configuration/yazi
-
 [manager]
-# Show hidden files
 show_hidden = true
-
-# Sorting
+show_symlink = true
+scrolloff = 5
 sort_by = "natural"
 sort_sensitive = false
 sort_reverse = false
 sort_dir_first = true
-
-# Line mode: none, size, permissions, mtime
 linemode = "size"
-
-# Show symlink target
-show_symlink = true
-
-# Ratio of parent:current:preview columns
 ratio = [1, 3, 4]
+title_format = "Yazi: {cwd}"
 
 [preview]
-# Maximum preview dimensions
-max_width = 1000
-max_height = 1000
-
-# Image preview (requires ueberzugpp on Linux, native on macOS)
+wrap = "yes"
+tab_size = 2
+max_width = 2000
+max_height = 1200
 image_filter = "lanczos3"
-image_quality = 75
-
-# Cache previews
+image_quality = 90
+sixel_fraction = 15
+ueberzug_scale = 1
+ueberzug_offset = [0, 0, 0, 0]
 cache_dir = ""
 
 [opener]
 edit = [
-    { run = 'nvim "$@"', block = true, for = "unix" }
+    { run = '${EDITOR:-nvim} "$@"', block = true, for = "unix" }
 ]
 open = [
     { run = 'open "$@"', desc = "Open", for = "macos" }
@@ -42,15 +32,36 @@ open = [
 reveal = [
     { run = 'open -R "$1"', desc = "Reveal in Finder", for = "macos" }
 ]
+play = [
+    { run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
+    { run = 'open "$@"', orphan = true, for = "macos" }
+]
+extract = [
+    { run = 'unar "$1"', desc = "Extract here", for = "unix" }
+]
 
 [open]
 rules = [
     { name = "*/", use = ["edit", "open", "reveal"] },
     { mime = "text/*", use = ["edit", "reveal"] },
     { mime = "image/*", use = ["open", "reveal"] },
-    { mime = "video/*", use = ["open", "reveal"] },
-    { mime = "audio/*", use = ["open", "reveal"] },
+    { mime = "video/*", use = ["play", "reveal"] },
+    { mime = "audio/*", use = ["play", "reveal"] },
+    { mime = "inode/x-empty", use = ["edit", "reveal"] },
     { mime = "application/json", use = ["edit", "reveal"] },
     { mime = "application/x-ndjson", use = ["edit", "reveal"] },
+    { mime = "*/javascript", use = ["edit", "reveal"] },
+    { mime = "application/{zip,gzip,x-tar,x-bzip*,x-7z-compressed,x-rar,x-xz}", use = ["extract", "reveal"] },
     { mime = "*", use = ["open", "reveal"] },
 ]
+
+[tasks]
+micro_workers = 10
+macro_workers = 25
+bizarre_retry = 5
+
+[plugin]
+prepend_previewers = []
+append_previewers = []
+prepend_fetchers = []
+append_fetchers = []

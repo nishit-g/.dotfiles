@@ -1,0 +1,5 @@
+[hosts.mac-home]
+host = "100.86.8.123"
+user = "nishit.gupta"
+desc = "MacBook via Tailscale"
+mosh = true

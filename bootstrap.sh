@@ -15,8 +15,8 @@ readonly BREW_FORMULAE=(
   fzf ripgrep fd eza zoxide bat
   lazygit gh jq yq
   sesh mise atuin git-delta
-  yazi ffmpegthumbnailer poppler
-  direnv tldr hyperfine ugrep
+  yazi ffmpegthumbnailer poppler unar imagemagick
+  direnv tldr hyperfine ugrep mosh
 )
 
 readonly BREW_CASKS=(
@@ -30,7 +30,7 @@ readonly BREW_CASKS=(
 readonly STOW_PACKAGES=(
   nvim zsh tmux alacritty git
   sesh atuin yazi bat mise
-  aerospace karabiner
+  aerospace karabiner dev bin
 )
 
 install_homebrew() {

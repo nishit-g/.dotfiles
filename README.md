@@ -132,3 +132,65 @@ Keep your local changes separate:
 3. **Raycast**: Open Raycast and set `Cmd + Space` as the global hotkey.
 4. **Font**: Ensure **JetBrainsMono Nerd Font** is installed (handled by brew).
 5. **Prompt**: Run `p10k configure` if the prompt looks broken.
+
+## Mobile Development (Android/Termux)
+
+Access your Mac dev environment from anywhere using your phone.
+
+### Stack
+
+| Tool | Purpose |
+| :--- | :--- |
+| **Tailscale** | Zero-config VPN mesh (WireGuard) |
+| **Mosh** | Mobile-resilient SSH (survives network switches) |
+| **dev** | fzf-powered connection manager |
+
+### Setup (Termux)
+
+```bash
+curl -sL https://raw.githubusercontent.com/nishit-g/dotfiles/v2/scripts/termux-setup.sh | bash
+```
+
+### Setup (Mac - Enable SSH)
+
+```bash
+# Enable Remote Login
+sudo systemsetup -setremotelogin on
+
+# Run hardening guide
+./scripts/mac-ssh-harden.sh
+```
+
+### Usage
+
+```bash
+# Interactive picker
+dev
+
+# Direct connect
+dev mac-home
+
+# Edit hosts
+dev --edit
+```
+
+### Host Configuration
+
+Edit `~/.config/dev/hosts.toml`:
+
+```toml
+[hosts.mac-home]
+host = "100.x.x.x"  # Tailscale IP
+user = "your-username"
+desc = "MacBook via Tailscale"
+mosh = true
+```
+
+### Workflow
+
+1. Install **Tailscale** on both Mac and Android (Play Store)
+2. Login to same Tailscale account
+3. Get Mac's Tailscale IP: `tailscale ip -4`
+4. Add to `hosts.toml`
+5. Copy SSH key: `ssh-copy-id user@100.x.x.x`
+6. Run `dev` → pick session → you're in
