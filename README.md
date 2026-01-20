@@ -138,7 +138,7 @@ Keep your local changes separate:
 
 ## Mobile Development (Android/Termux)
 
-Access your Mac dev environment from anywhere using your phone.
+Access your Mac dev environment from anywhere using your phone. Full powerhouse setup.
 
 ### Stack
 
@@ -147,12 +147,54 @@ Access your Mac dev environment from anywhere using your phone.
 | **Tailscale** | Zero-config VPN mesh (WireGuard) |
 | **Mosh** | Mobile-resilient SSH (survives network switches) |
 | **dev** | fzf-powered connection manager |
+| **Starship** | Minimal, fast prompt for mobile |
+| **Termux:Widget** | Home screen shortcuts for one-tap access |
 
 ### Setup (Termux)
 
+One command installs everything:
+
 ```bash
-curl -sL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/scripts/termux-setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/scripts/termux-setup.sh | bash
 ```
+
+This installs:
+- Modern CLI tools (bat, eza, fd, rg, zoxide, delta)
+- Starship prompt (mobile-optimized)
+- Widget shortcuts for one-tap access
+- Auto-tmux attachment
+- Gruvbox Dark theme
+- JetBrainsMono Nerd Font
+
+### Widget Shortcuts
+
+Install **Termux:Widget** from F-Droid, then add shortcuts to home screen:
+
+| Shortcut | Action |
+| :--- | :--- |
+| `mac` | Connect to Mac (mosh + tmux) |
+| `shell` | Local tmux session |
+| `sync` | Pull latest dotfiles |
+| `nvim` | Quick neovim |
+
+Background tasks (no terminal window):
+
+| Task | Action |
+| :--- | :--- |
+| `start-sshd` | Start SSH daemon |
+| `tailscale-status` | Show VPN status notification |
+
+### Quick Commands
+
+| Alias | Action |
+| :--- | :--- |
+| `m` | Connect to Mac |
+| `v` | Neovim |
+| `ta` | Attach/create tmux |
+| `lg` | Lazygit |
+| `clip` | Copy to clipboard |
+| `paste` | Paste from clipboard |
+| `notify` | Send notification |
 
 ### Setup (Mac - Enable SSH)
 

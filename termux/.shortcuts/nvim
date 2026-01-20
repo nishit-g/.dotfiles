@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Quick neovim launcher
+# Used by Termux:Widget
+
+cd "$HOME"
+nvim

@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Launch local shell with tmux
+# Used by Termux:Widget
+
+tmux new-session -As local

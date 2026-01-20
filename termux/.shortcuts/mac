@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# One-tap connect to Mac via mosh+tmux
+# Used by Termux:Widget
+
+export PATH="$HOME/bin:$PATH"
+dev mac-home

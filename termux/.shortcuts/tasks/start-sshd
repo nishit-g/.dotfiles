@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Wake up SSH daemon (background task - no terminal)
+# Used by Termux:Widget background tasks
+
+sshd
+termux-notification \
+    --title "SSH Server" \
+    --content "SSHD started on port 8022" \
+    --priority high

@@ -1,0 +1,24 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# One-tap dotfiles sync
+# Used by Termux:Widget
+
+set -euo pipefail
+
+notify() {
+    if command -v termux-notification >/dev/null 2>&1; then
+        termux-notification --title "Dotfiles" --content "$1"
+    fi
+    echo "$1"
+}
+
+cd "$HOME/dotfiles" 2>/dev/null || cd "$HOME/.dotfiles" 2>/dev/null || {
+    notify "No dotfiles repo found"
+    exit 1
+}
+
+notify "Syncing dotfiles..."
+
+git fetch origin
+git pull --rebase origin main || git pull --rebase origin v2
+
+notify "Dotfiles synced!"

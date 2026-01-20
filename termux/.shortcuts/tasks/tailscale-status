@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Show Tailscale status (background task - no terminal)
+# Used by Termux:Widget background tasks
+
+status=$(tailscale status 2>&1 | head -5)
+termux-notification \
+    --title "Tailscale Status" \
+    --content "$status" \
+    --priority high

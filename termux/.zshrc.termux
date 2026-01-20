@@ -1,0 +1,156 @@
+# Termux ZSH Configuration - Mobile Powerhouse
+# This file is sourced by the main termux-setup.sh
+
+# === Environment ===
+export TERMUX_HOME="$HOME"
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PAGER="less"
+export LANG="en_US.UTF-8"
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# === Starship Prompt ===
+if command -v starship >/dev/null 2>&1; then
+    export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+    eval "$(starship init zsh)"
+fi
+
+# === Modern CLI Tools ===
+# eza (better ls)
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza --icons --group-directories-first'
+    alias ll='eza -la --icons --group-directories-first'
+    alias lt='eza -T --icons --level=2'
+    alias la='eza -a --icons'
+fi
+
+# bat (better cat)
+if command -v bat >/dev/null 2>&1; then
+    alias cat='bat --paging=never --style=plain'
+    alias catp='bat'
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+# zoxide (better cd)
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+    alias cd='z'
+fi
+
+# fzf
+if command -v fzf >/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --color=bg+:#3c3836,bg:#1d2021,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+    [ -f "$PREFIX/share/fzf/key-bindings.zsh" ] && source "$PREFIX/share/fzf/key-bindings.zsh"
+    [ -f "$PREFIX/share/fzf/completion.zsh" ] && source "$PREFIX/share/fzf/completion.zsh"
+fi
+
+# === Quick Aliases ===
+# One-letter power commands
+alias m='dev mac-home'              # Connect to Mac
+alias v='nvim'                       # Neovim
+alias g='git'                        # Git
+alias t='tmux'                       # Tmux
+alias ta='tmux attach -t main || tmux new -s main'  # Attach or create main session
+alias lg='lazygit'                   # Lazygit
+alias c='clear'                      # Clear
+
+# Quick navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Git shortcuts
+alias gs='git status -sb'
+alias gd='git diff'
+alias gp='git pull --rebase'
+alias gc='git commit'
+alias gco='git checkout'
+alias gb='git branch'
+alias gl='git log --oneline -20'
+
+# Termux-specific
+alias storage='termux-setup-storage'
+alias share='termux-share'
+alias clip='termux-clipboard-set'
+alias paste='termux-clipboard-get'
+alias notify='termux-notification --title'
+alias torch='termux-torch'
+alias vibrate='termux-vibrate'
+alias battery='termux-battery-status'
+alias wifi='termux-wifi-connectioninfo'
+
+# === Auto-attach tmux ===
+# Only if interactive, not already in tmux, and not SSH
+if [[ -z "$TMUX" ]] && [[ -z "$SSH_CONNECTION" ]] && [[ $- == *i* ]]; then
+    # Check if main session exists
+    if tmux has-session -t main 2>/dev/null; then
+        exec tmux attach -t main
+    else
+        exec tmux new-session -s main
+    fi
+fi
+
+# === SSH Agent ===
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" >/dev/null 2>&1
+fi
+
+# === History ===
+HISTSIZE=50000
+SAVEHIST=50000
+HISTFILE="$HOME/.zsh_history"
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt EXTENDED_HISTORY
+
+# === Key Bindings ===
+bindkey -e  # Emacs mode for terminal compatibility
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+bindkey '^R' fzf-history-widget 2>/dev/null || bindkey '^R' history-incremental-search-backward
+
+# === Completion ===
+autoload -Uz compinit
+compinit -C  # -C for faster startup
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# === Notification on long-running commands ===
+# Notify when command takes > 30 seconds
+_cmd_timer_start() {
+    _cmd_timer=$SECONDS
+    _cmd_name="$1"
+}
+
+_cmd_timer_end() {
+    if [[ -n "$_cmd_timer" ]]; then
+        local elapsed=$((SECONDS - _cmd_timer))
+        if [[ $elapsed -gt 30 ]] && command -v termux-notification >/dev/null 2>&1; then
+            termux-notification --title "Command Complete" --content "$_cmd_name finished in ${elapsed}s"
+        fi
+        unset _cmd_timer _cmd_name
+    fi
+}
+
+preexec() { _cmd_timer_start "$1"; }
+precmd() { _cmd_timer_end; }
+
+# === OSC52 Clipboard (works over SSH/mosh) ===
+# Copy stdin to system clipboard via OSC52
+osc52_copy() {
+    local data
+    data=$(base64 | tr -d '\n')
+    printf "\033]52;c;%s\a" "$data"
+}
+
+# Alias for piping to clipboard
+alias yank='osc52_copy'
+
+# === Welcome Message ===
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+    echo "🚀 Termux Powerhouse Ready"
+    echo "   m = Mac | v = nvim | ta = tmux"
+fi

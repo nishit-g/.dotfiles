@@ -1,0 +1,98 @@
+# Starship Prompt - Mobile Optimized
+# Minimal, fast, battery-friendly
+
+# Reduce prompt refresh for performance
+command_timeout = 500
+
+# === Format ===
+format = """
+$directory\
+$git_branch\
+$git_status\
+$character"""
+
+# Single line, no right prompt (better for small screens)
+add_newline = false
+
+# === Directory ===
+[directory]
+style = "bold blue"
+truncation_length = 2
+truncate_to_repo = true
+format = "[$path]($style) "
+
+# === Git Branch ===
+[git_branch]
+style = "bold green"
+format = "[$branch]($style) "
+truncation_length = 15
+
+# === Git Status ===
+[git_status]
+style = "bold yellow"
+format = '([$all_status$ahead_behind]($style) )'
+conflicted = "!"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+untracked = "?"
+stashed = "$"
+modified = "~"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+# === Character ===
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold purple)"
+
+# === Disabled (for speed) ===
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[kubernetes]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[ruby]
+disabled = true
+
+[rust]
+disabled = true
+
+[golang]
+disabled = true
+
+[java]
+disabled = true
+
+[package]
+disabled = true
+
+[battery]
+disabled = true
+
+[time]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[cmd_duration]
+disabled = true
