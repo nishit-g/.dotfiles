@@ -87,12 +87,15 @@ curl -sL https://raw.githubusercontent.com/nishit-gupta/dotfiles/v2/install.sh |
 ├── alacritty/    # Terminal emulator settings
 ├── atuin/        # Shell history config
 ├── bat/          # bat (cat clone) themes & config
+├── bin/          # Custom scripts (dev command)
+├── dev/          # Dev connection manager config
 ├── git/          # Global git config & ignore
 ├── karabiner/    # Karabiner-Elements JSON
 ├── mise/         # Runtime manager (mise) config
 ├── nvim/         # Neovim (LazyVim) setup
-├── scripts/      # Maintenance & macOS default scripts
+├── scripts/      # Setup scripts (termux, macos, ssh)
 ├── sesh/         # Sesh session manager config
+├── ssh/          # SSH client config
 ├── tmux/         # Tmux configuration
 ├── yazi/         # Yazi file manager config
 └── zsh/          # Zsh aliases, functions, & plugins
@@ -194,3 +197,43 @@ mosh = true
 4. Add to `hosts.toml`
 5. Copy SSH key: `ssh-copy-id user@100.x.x.x`
 6. Run `dev` → pick session → you're in
+
+### Bidirectional: Mac → Android
+
+You can also SSH from Mac into your Android:
+
+**On Termux (Android):**
+```bash
+pkg install openssh -y
+sshd                           # Start SSH server
+whoami                         # Note your username (e.g., u0_a521)
+
+# Add Mac's public key
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+echo "YOUR_MAC_PUBLIC_KEY" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+# Auto-start sshd (optional)
+sv-enable sshd
+```
+
+**On Mac, add to `~/.config/dev/hosts.toml`:**
+```toml
+[hosts.android]
+host = "100.x.x.x"    # Android's Tailscale IP
+user = "u0_aXXX"      # From 'whoami' in Termux
+port = 8022
+desc = "Android via Tailscale"
+mosh = false
+```
+
+Then: `dev android`
+
+### Troubleshooting
+
+| Issue | Fix |
+| :--- | :--- |
+| Tailscale not connecting | Disable battery optimization for Tailscale on Android |
+| SSH permission denied | Check `~/.ssh/authorized_keys` permissions (600) |
+| Mosh not found | Install mosh: `brew install mosh` (Mac) or `pkg install mosh` (Termux) |
+| sshd not running | Run `sshd` in Termux, or `sv-enable sshd` for auto-start |
