@@ -5,12 +5,17 @@ return {
   -- File Explorer
   {
     "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeOpen" },
+    keys = {
+      { "<leader>e", "<cmd>NvimTreeToggle<CR>", desc = "Toggle NvimTree" },
+      { "<leader>E", "<cmd>NvimTreeFocus<CR>", desc = "Focus NvimTree" },
+    },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("nvim-tree").setup({
         view = {
           width = 32,
-          side = "left",
+          side = "right",
         },
         renderer = {
           highlight_git = true,
@@ -28,8 +33,6 @@ return {
         filters = { dotfiles = false },
         git = { enable = true },
       })
-      vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
-      vim.keymap.set("n", "<leader>E", "<cmd>NvimTreeFocus<CR>", { desc = "Focus NvimTree" })
     end,
   },
 
@@ -85,6 +88,10 @@ return {
   -- Inc-Rename
   {
     "smjonas/inc-rename.nvim",
+    cmd = "IncRename",
+    keys = {
+      { "<leader>rn", function() return ":IncRename " .. vim.fn.expand("<cword>") end, expr = true, desc = "IncRename" },
+    },
     opts = {},
   },
 

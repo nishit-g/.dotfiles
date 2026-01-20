@@ -2,63 +2,57 @@ return {
   -- LazyDev (Better Lua Dev)
   {
     "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
+    ft = "lua",
     opts = {
       library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
         { path = "luvit-meta/library", words = { "vim%.uv" } },
       },
     },
   },
-  { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+  { "Bilal2453/luvit-meta", lazy = true },
 
   -- Mason
   {
     "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup()
-    end,
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts = {},
   },
 
-  -- Mason Tool Installer (auto-install formatters, linters, LSPs)
+  -- Mason Tool Installer
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
+    event = "VeryLazy",
     dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-tool-installer").setup({
-        ensure_installed = {
-          -- LSP servers
-          "lua-language-server",
-          "typescript-language-server",
-          "pyright",
-          "json-lsp",
-          "css-lsp",
-          "html-lsp",
-          "bash-language-server",
-          "tailwindcss-language-server",
-          -- Formatters
-          "stylua",
-          "prettierd",
-          "black",
-          "shfmt",
-          -- Linters
-          "eslint_d",
-          "shellcheck",
-          "hadolint",
-          "markdownlint",
-          -- DAP
-          "debugpy",
-        },
-        auto_update = false,
-        run_on_start = true,
-      })
-    end,
+    opts = {
+      ensure_installed = {
+        "lua-language-server",
+        "typescript-language-server",
+        "pyright",
+        "json-lsp",
+        "css-lsp",
+        "html-lsp",
+        "bash-language-server",
+        "tailwindcss-language-server",
+        "stylua",
+        "prettierd",
+        "black",
+        "shfmt",
+        "eslint_d",
+        "shellcheck",
+        "hadolint",
+        "markdownlint",
+        "debugpy",
+      },
+      auto_update = false,
+      run_on_start = true,
+    },
   },
 
   -- Mason LSP Config
   {
     "williamboman/mason-lspconfig.nvim",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
@@ -83,12 +77,10 @@ return {
         capabilities = blink.get_lsp_capabilities(capabilities)
       end
 
-      -- Set global defaults for all LSP servers
       vim.lsp.config("*", {
         capabilities = capabilities,
       })
 
-      -- LspAttach autocommand for keymaps
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
@@ -108,9 +100,7 @@ return {
   },
 
   -- LSP Config
-  {
-    "neovim/nvim-lspconfig",
-  },
+  { "neovim/nvim-lspconfig", lazy = true },
 
   -- Completion: blink.cmp
   {
@@ -131,7 +121,13 @@ return {
   -- Formatting: conform.nvim
   {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
+    event = "BufWritePre",
+    cmd = "ConformInfo",
+    keys = {
+      { "<leader>mp", function()
+        require("conform").format({ lsp_fallback = true, async = false, timeout_ms = 3000 })
+      end, mode = { "n", "v" }, desc = "Format file or range" },
+    },
     opts = {
       formatters_by_ft = {
         lua = { "stylua" },
@@ -158,22 +154,12 @@ return {
         return { timeout_ms = 3000, lsp_format = "fallback" }
       end,
     },
-    config = function(_, opts)
-      require("conform").setup(opts)
-      vim.keymap.set({ "n", "v" }, "<leader>mp", function()
-        require("conform").format({
-          lsp_fallback = true,
-          async = false,
-          timeout_ms = 3000,
-        })
-      end, { desc = "Format file or range" })
-    end,
   },
 
   -- Linting: nvim-lint
   {
     "mfussenegger/nvim-lint",
-    event = { "BufReadPost", "BufWritePost", "InsertLeave" },
+    event = { "BufReadPost", "BufWritePost" },
     config = function()
       local lint = require("lint")
 
@@ -183,19 +169,15 @@ return {
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         vue = { "eslint_d" },
-
         sh = { "shellcheck" },
         bash = { "shellcheck" },
         zsh = { "shellcheck" },
-
         dockerfile = { "hadolint" },
-
         markdown = { "markdownlint" },
       }
 
-      local group = vim.api.nvim_create_augroup("NvimLintAutoGroup", { clear = true })
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-        group = group,
+        group = vim.api.nvim_create_augroup("NvimLintAutoGroup", { clear = true }),
         callback = function()
           pcall(lint.try_lint)
         end,

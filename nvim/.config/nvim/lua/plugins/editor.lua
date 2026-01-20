@@ -1,8 +1,9 @@
 return {
-  -- Mini.nvim (excluding statusline)
+  -- Mini.nvim
   {
     "echasnovski/mini.nvim",
     version = false,
+    event = "VeryLazy",
     config = function()
       require("mini.surround").setup()
       require("mini.comment").setup()
@@ -22,6 +23,14 @@ return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "Harpoon menu" },
+      { "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon add" },
+      { "<M-h>", function() require("harpoon"):list():select(1) end, desc = "Harpoon 1" },
+      { "<M-j>", function() require("harpoon"):list():select(2) end, desc = "Harpoon 2" },
+      { "<M-k>", function() require("harpoon"):list():select(3) end, desc = "Harpoon 3" },
+      { "<M-l>", function() require("harpoon"):list():select(4) end, desc = "Harpoon 4" },
+    },
     config = function()
       require("harpoon").setup({})
     end,
@@ -30,12 +39,14 @@ return {
   -- Auto Tag
   {
     "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
     opts = {},
   },
 
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup({
@@ -53,6 +64,7 @@ return {
   -- Git Signs
   {
     "lewis6991/gitsigns.nvim",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("gitsigns").setup({
         on_attach = function(bufnr)
@@ -65,7 +77,6 @@ return {
             vim.keymap.set(mode, lhs, rhs, opts)
           end
 
-          -- Hunk navigation
           map("n", "]h", function()
             if vim.wo.diff then return "]h" end
             vim.schedule(gs.next_hunk)
@@ -76,7 +87,6 @@ return {
             vim.schedule(gs.prev_hunk)
           end, { expr = true })
 
-          -- Hunk actions
           map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
           map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
           map("v", "<leader>hs", function()
@@ -107,9 +117,43 @@ return {
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gblame" },
   },
 
+  -- Diffview
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Diffview open" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "Diffview file history" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "Diffview branch history" },
+      { "<leader>gq", "<cmd>DiffviewClose<CR>", desc = "Diffview close" },
+    },
+    opts = {
+      enhanced_diff_hl = true,
+      view = {
+        default = { layout = "diff2_horizontal" },
+        merge_tool = { layout = "diff3_mixed" },
+      },
+    },
+  },
+
+  -- Indent guides
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    main = "ibl",
+    opts = {
+      indent = { char = "│", tab_char = "│" },
+      scope = { enabled = false },
+      exclude = {
+        filetypes = { "help", "dashboard", "neo-tree", "Trouble", "lazy", "mason", "notify", "toggleterm" },
+      },
+    },
+  },
+
   -- Todo Comments
   {
     "folke/todo-comments.nvim",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {},
   },
@@ -118,6 +162,12 @@ return {
   {
     "folke/trouble.nvim",
     branch = "main",
+    cmd = "Trouble",
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Buffer Diagnostics" },
+      { "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "Symbols (Trouble)" },
+    },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       use_diagnostic_signs = true,
@@ -128,6 +178,9 @@ return {
   {
     "stevearc/aerial.nvim",
     event = "LspAttach",
+    keys = {
+      { "<leader>la", "<cmd>AerialToggle<CR>", desc = "Aerial toggle" },
+    },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       backends = { "lsp", "treesitter", "markdown" },
