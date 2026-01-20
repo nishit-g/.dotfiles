@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/dev"
+HOSTS_FILE="$CONFIG_DIR/hosts.toml"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+die() { echo -e "${RED}✗${NC} $1" >&2; exit 1; }
+info() { echo -e "${BLUE}▶${NC} $1"; }
+
+command -v fzf >/dev/null || die "fzf required"
+
+[[ -f "$HOSTS_FILE" ]] || die "No hosts config. Run: dev --edit"
+
+parse_hosts() {
+    awk '
+    /^\[hosts\./ { gsub(/\[hosts\.|\]/, ""); name=$0; next }
+    /^host[[:space:]]*=/ { gsub(/host[[:space:]]*=[[:space:]]*"|"/, ""); host=$0 }
+    /^user[[:space:]]*=/ { gsub(/user[[:space:]]*=[[:space:]]*"|"/, ""); user=$0 }
+    /^port[[:space:]]*=/ { gsub(/port[[:space:]]*=[[:space:]]*/, ""); port=$0 }
+    /^desc[[:space:]]*=/ { gsub(/desc[[:space:]]*=[[:space:]]*"|"/, ""); desc=$0 }
+    /^mosh[[:space:]]*=/ { gsub(/mosh[[:space:]]*=[[:space:]]*/, ""); mosh=$0 }
+    /^$/ && name { printf "%s|%s|%s|%s|%s|%s\n", name, host, user, port?port:22, mosh?mosh:"true", desc; name=host=user=port=desc=mosh="" }
+    END { if(name) printf "%s|%s|%s|%s|%s|%s\n", name, host, user, port?port:22, mosh?mosh:"true", desc }
+    ' "$HOSTS_FILE"
+}
+
+format_host() {
+    local name=$1 host=$2 user=$3 port=$4 mosh=$5 desc=$6
+    local icon="🖥️ "; [[ "$mosh" == "true" ]] && icon="⚡"
+    printf "%s %-12s %s@%s" "$icon" "$name" "$user" "$host"
+    [[ -n "$desc" ]] && printf "  \033[90m# %s\033[0m" "$desc"
+    printf "\n"
+}
+
+select_host() {
+    local hosts formatted
+    hosts=$(parse_hosts)
+    [[ -z "$hosts" ]] && die "No hosts configured"
+    formatted=$(while IFS='|' read -r name host user port mosh desc; do
+        format_host "$name" "$host" "$user" "$port" "$mosh" "$desc"
+    done <<< "$hosts")
+    echo "$formatted" | fzf --ansi --no-sort --border --prompt '⚡ ' \
+        --header '  ^e edit config' \
+        --bind "ctrl-e:execute(${EDITOR:-vim} $HOSTS_FILE </dev/tty >/dev/tty)+abort" | awk '{print $2}'
+}
+
+connect() {
+    local target=$1 line host user port use_mosh
+    line=$(parse_hosts | grep "^$target|" | head -1)
+    [[ -z "$line" ]] && die "Host '$target' not found"
+    IFS='|' read -r _ host user port use_mosh _ <<< "$line"
+    info "Connecting to $user@$host..."
+    if [[ "$use_mosh" == "true" ]] && command -v mosh >/dev/null 2>&1; then
+        [[ "$port" != "22" ]] && mosh --ssh="ssh -p $port" "$user@$host" -- tmux new -As main || mosh "$user@$host" -- tmux new -As main
+    else
+        ssh -t -p "$port" "$user@$host" "tmux new -As main"
+    fi
+}
+
+case "${1:-}" in
+    --help|-h) echo "Usage: dev [host] | dev --edit | dev --list" ;;
+    --list|-l) parse_hosts | while IFS='|' read -r n h u p m d; do format_host "$n" "$h" "$u" "$p" "$m" "$d"; done ;;
+    --edit|-e) mkdir -p "$CONFIG_DIR"; ${EDITOR:-vim} "$HOSTS_FILE" ;;
+    "") selected=$(select_host); [[ -n "$selected" ]] && connect "$selected" ;;
+    *) connect "$1" ;;
+esac
