@@ -1,21 +1,5 @@
-# Dev Connection Manager - Host Configuration
-# Use: dev <name> or just `dev` for interactive picker
-
 [hosts.mac-home]
-host = "100.x.x.x"  # Your Tailscale IP
+host = "100.86.8.123"
 user = "nishit.gupta"
 desc = "MacBook via Tailscale"
 mosh = true
-
-# [hosts.work]
-# host = "work.tailnet.ts.net"
-# user = "nishit"
-# desc = "Work machine"
-# mosh = true
-
-# [hosts.vps]
-# host = "your-vps.com"
-# user = "root"
-# port = 22
-# desc = "DigitalOcean droplet"
-# mosh = true

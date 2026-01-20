@@ -34,15 +34,18 @@ fi
 
 info "Cloning dotfiles..."
 DOTFILES="$HOME/dotfiles"
+REPO_URL="https://github.com/nishit-g/dotfiles.git"
+BRANCH="v2"
+
 if [[ ! -d "$DOTFILES" ]]; then
-    git clone https://github.com/nishit-g/.dotfiles.git "$DOTFILES"
+    git clone -b "$BRANCH" "$REPO_URL" "$DOTFILES"
 else
-    cd "$DOTFILES" && git pull
+    cd "$DOTFILES" && git pull origin "$BRANCH"
 fi
 
 info "Setting up dev command..."
 mkdir -p ~/bin ~/.config/dev
-cp "$DOTFILES/bin/dev" ~/bin/dev
+cp "$DOTFILES/bin/bin/dev" ~/bin/dev
 chmod +x ~/bin/dev
 
 if [[ ! -f ~/.config/dev/hosts.toml ]]; then
@@ -67,12 +70,27 @@ echo ""
 
 success "Setup complete!"
 echo ""
-echo "Next steps:"
-echo "  1. Install Tailscale app from Play Store"
-echo "  2. Login to same Tailscale account as your Mac"
-echo "  3. Run: dev --edit"
-echo "  4. Add your Mac's Tailscale IP"
-echo "  5. Run: dev"
+echo "========================================="
+echo "        NEXT STEPS (do these now)"
+echo "========================================="
 echo ""
-echo "Copy your SSH key to Mac:"
-echo "  ssh-copy-id user@your-mac-tailscale-ip"
+echo "1. Install Tailscale from Play Store:"
+echo "   https://play.google.com/store/apps/details?id=com.tailscale.ipn"
+echo ""
+echo "2. Login with SAME account as your Mac"
+echo ""
+echo "3. Copy SSH key to your Mac:"
+echo "   ssh-copy-id nishit.gupta@YOUR_MAC_TAILSCALE_IP"
+echo ""
+echo "4. Edit hosts config:"
+echo "   dev --edit"
+echo "   (replace 100.x.x.x with your Mac's Tailscale IP)"
+echo ""
+echo "5. Connect:"
+echo "   dev"
+echo ""
+echo "========================================="
+echo "Your SSH public key (copy this if needed):"
+echo "========================================="
+cat ~/.ssh/id_ed25519.pub 2>/dev/null || echo "(no key found)"
+echo ""
