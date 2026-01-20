@@ -34,7 +34,7 @@ fi
 
 info "Cloning dotfiles..."
 DOTFILES="$HOME/dotfiles"
-REPO_URL="https://github.com/nishit-g/dotfiles.git"
+REPO_URL="https://github.com/nishit-g/.dotfiles.git"
 BRANCH="v2"
 
 if [[ ! -d "$DOTFILES" ]]; then

@@ -7,7 +7,7 @@ An enterprise-grade macOS development environment optimized for performance, pro
 Experience the full setup with a single command:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/nishit-gupta/dotfiles/v2/install.sh | bash
+curl -sL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/install.sh | bash
 ```
 
 ## Features
@@ -151,7 +151,7 @@ Access your Mac dev environment from anywhere using your phone.
 ### Setup (Termux)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/nishit-g/dotfiles/v2/scripts/termux-setup.sh | bash
+curl -sL https://raw.githubusercontent.com/nishit-g/.dotfiles/v2/scripts/termux-setup.sh | bash
 ```
 
 ### Setup (Mac - Enable SSH)

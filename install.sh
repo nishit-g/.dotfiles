@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="nishit-gupta/dotfiles"
+REPO="nishit-g/.dotfiles"
 BRANCH="v2"
 DOTFILES_DIR="$HOME/dotfiles"
 
