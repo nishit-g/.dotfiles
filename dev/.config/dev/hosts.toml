@@ -1,16 +1,12 @@
-# Dev Connection Manager - Host Configuration
-# Run: dev (interactive) or dev <name> (direct)
-# Edit: dev --edit
-
 [hosts.mac-home]
-host = "100.x.x.x"  # Your Mac's Tailscale IP (run: tailscale ip -4)
-user = "your-username"
+host = "100.86.8.123"
+user = "nishit.gupta"
 desc = "MacBook via Tailscale"
 mosh = true
 
-# [hosts.android]
-# host = "100.x.x.x"  # Your Android's Tailscale IP
-# user = "u0_aXXX"    # Run 'whoami' in Termux to get this
-# port = 8022
-# desc = "Android via Tailscale"
-# mosh = false
+[hosts.android]
+host = "100.71.204.114"
+user = "u0_a521"
+port = 8022
+desc = "Android via Tailscale"
+mosh = false

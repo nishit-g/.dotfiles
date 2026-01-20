@@ -56,7 +56,11 @@ connect() {
     IFS='|' read -r _ host user port use_mosh _ <<< "$line"
     info "Connecting to $user@$host..."
     if [[ "$use_mosh" == "true" ]] && command -v mosh >/dev/null 2>&1; then
-        [[ "$port" != "22" ]] && mosh --ssh="ssh -p $port" "$user@$host" -- tmux new -As main || mosh "$user@$host" -- tmux new -As main
+        if [[ "$port" != "22" ]]; then
+            mosh --server=/opt/homebrew/bin/mosh-server --ssh="ssh -p $port" "$user@$host" -- tmux new -As main
+        else
+            mosh --server=/opt/homebrew/bin/mosh-server "$user@$host" -- tmux new -As main
+        fi
     else
         ssh -t -p "$port" "$user@$host" "tmux new -As main"
     fi
