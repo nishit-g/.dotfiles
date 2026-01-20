@@ -1,0 +1,159 @@
+# Yazi theme - Tokyo Night inspired
+# Colors tuned for dark terminals with good contrast
+
+[manager]
+cwd = { fg = "#7aa2f7" }
+
+# Hovered item
+hovered = { bg = "#292e42", bold = true }
+preview_hovered = { bg = "#292e42" }
+
+# Find/search matches
+find_keyword = { fg = "#e0af68", bold = true, italic = true, underline = true }
+find_position = { fg = "#9ece6a", bg = "reset", bold = true, italic = true }
+
+# Markers
+marker_copied = { fg = "#9ece6a", bg = "#9ece6a" }
+marker_cut = { fg = "#f7768e", bg = "#f7768e" }
+marker_marked = { fg = "#7aa2f7", bg = "#7aa2f7" }
+marker_selected = { fg = "#bb9af7", bg = "#bb9af7" }
+
+# Tabs
+tab_active = { fg = "#1a1b26", bg = "#7aa2f7", bold = true }
+tab_inactive = { fg = "#a9b1d6", bg = "#24283b" }
+tab_width = 1
+
+# Count
+count_copied = { fg = "#1a1b26", bg = "#9ece6a" }
+count_cut = { fg = "#1a1b26", bg = "#f7768e" }
+count_selected = { fg = "#1a1b26", bg = "#bb9af7" }
+
+# Border
+border_symbol = "│"
+border_style = { fg = "#3b4261" }
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#3b4261", bg = "#3b4261" }
+
+# Mode indicators
+mode_normal = { fg = "#1a1b26", bg = "#7aa2f7", bold = true }
+mode_select = { fg = "#1a1b26", bg = "#bb9af7", bold = true }
+mode_unset = { fg = "#1a1b26", bg = "#f7768e", bold = true }
+
+# Progress
+progress_label = { fg = "#c0caf5", bold = true }
+progress_normal = { fg = "#3b4261", bg = "#24283b" }
+progress_error = { fg = "#f7768e", bg = "#24283b" }
+
+# Permissions
+permissions_t = { fg = "#7aa2f7" }
+permissions_r = { fg = "#e0af68" }
+permissions_w = { fg = "#f7768e" }
+permissions_x = { fg = "#9ece6a" }
+permissions_s = { fg = "#9d7cd8" }
+
+[input]
+border = { fg = "#7aa2f7" }
+title = {}
+value = {}
+selected = { bg = "#364a82" }
+
+[select]
+border = { fg = "#7aa2f7" }
+active = { fg = "#bb9af7", bold = true }
+inactive = {}
+
+[tasks]
+border = { fg = "#7aa2f7" }
+title = {}
+hovered = { fg = "#bb9af7", underline = true }
+
+[which]
+mask = { bg = "#1a1b26" }
+cand = { fg = "#7dcfff" }
+rest = { fg = "#565f89" }
+desc = { fg = "#bb9af7" }
+separator = "  "
+separator_style = { fg = "#3b4261" }
+
+[help]
+on = { fg = "#7aa2f7" }
+run = { fg = "#bb9af7" }
+desc = {}
+hovered = { bg = "#292e42", bold = true }
+footer = { fg = "#565f89", bg = "#1a1b26" }
+
+[filetype]
+rules = [
+  # Directories
+  { name = "*/", fg = "#7aa2f7", bold = true },
+
+  # Dotfiles
+  { name = ".*", fg = "#565f89" },
+
+  # Media
+  { mime = "image/*", fg = "#9ece6a" },
+  { mime = "video/*", fg = "#e0af68" },
+  { mime = "audio/*", fg = "#f7768e" },
+
+  # Documents
+  { mime = "application/pdf", fg = "#f7768e" },
+  { mime = "application/*zip*", fg = "#bb9af7" },
+  { mime = "application/*tar*", fg = "#bb9af7" },
+  { mime = "application/*rar*", fg = "#bb9af7" },
+  { mime = "application/*7z*", fg = "#bb9af7" },
+
+  # Code
+  { name = "*.rs", fg = "#ff9e64" },
+  { name = "*.go", fg = "#7dcfff" },
+  { name = "*.py", fg = "#e0af68" },
+  { name = "*.js", fg = "#e0af68" },
+  { name = "*.ts", fg = "#7aa2f7" },
+  { name = "*.tsx", fg = "#7aa2f7" },
+  { name = "*.jsx", fg = "#e0af68" },
+  { name = "*.lua", fg = "#7aa2f7" },
+  { name = "*.sh", fg = "#9ece6a" },
+  { name = "*.zsh", fg = "#9ece6a" },
+  { name = "*.bash", fg = "#9ece6a" },
+  { name = "*.fish", fg = "#9ece6a" },
+
+  # Config
+  { name = "*.json", fg = "#e0af68" },
+  { name = "*.yaml", fg = "#f7768e" },
+  { name = "*.yml", fg = "#f7768e" },
+  { name = "*.toml", fg = "#ff9e64" },
+
+  # Docs
+  { name = "*.md", fg = "#7dcfff" },
+  { name = "*.txt", fg = "#c0caf5" },
+
+  # Git
+  { name = ".git*", fg = "#f7768e" },
+
+  # Special files
+  { name = "Makefile", fg = "#bb9af7" },
+  { name = "Dockerfile*", fg = "#7dcfff" },
+  { name = "*.lock", fg = "#565f89" },
+  { name = "*.log", fg = "#565f89" },
+
+  # Links
+  { is = "link", fg = "#7dcfff", italic = true },
+
+  # Orphans
+  { is = "orphan", fg = "#f7768e", italic = true },
+
+  # Executables
+  { is = "exec", fg = "#9ece6a", bold = true },
+
+  # Fallback
+  { name = "*", fg = "#c0caf5" },
+]
+
+[icon]
+globs = []
+dirs = []
+files = []
+exts = []
+conds = []
