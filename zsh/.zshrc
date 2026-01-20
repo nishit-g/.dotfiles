@@ -88,7 +88,13 @@ function sesh-sessions() {
       --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t)' \
       --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z)' \
       --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡ )+reload(sesh list -i)')
-    [[ -n "$session" ]] && sesh connect "$session"
+    if [[ -n "$session" ]]; then
+      if [[ -n "$TMUX" ]]; then
+        sesh connect --switch "$session"
+      else
+        sesh connect "$session"
+      fi
+    fi
   } </dev/tty
   zle reset-prompt
 }
