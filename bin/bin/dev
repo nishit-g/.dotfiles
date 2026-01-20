@@ -55,14 +55,18 @@ connect() {
     [[ -z "$line" ]] && die "Host '$target' not found"
     IFS='|' read -r _ host user port use_mosh _ <<< "$line"
     info "Connecting to $user@$host..."
+    
+    # Remote tmux command with PATH fix
+    local tmux_cmd='export PATH="/opt/homebrew/bin:$PATH"; tmux new -As main'
+    
     if [[ "$use_mosh" == "true" ]] && command -v mosh >/dev/null 2>&1; then
         if [[ "$port" != "22" ]]; then
-            mosh --server=/opt/homebrew/bin/mosh-server --ssh="ssh -p $port" "$user@$host" -- tmux new -As main
+            mosh --server=/opt/homebrew/bin/mosh-server --ssh="ssh -p $port" "$user@$host" -- bash -lc "$tmux_cmd"
         else
-            mosh --server=/opt/homebrew/bin/mosh-server "$user@$host" -- tmux new -As main
+            mosh --server=/opt/homebrew/bin/mosh-server "$user@$host" -- bash -lc "$tmux_cmd"
         fi
     else
-        ssh -t -p "$port" "$user@$host" "tmux new -As main"
+        ssh -t -p "$port" "$user@$host" "$tmux_cmd"
     fi
 }
 
