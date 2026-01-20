@@ -1,0 +1,25 @@
+# bat configuration
+# https://github.com/sharkdp/bat
+
+# Theme (run `bat --list-themes` to see options)
+--theme="Dracula"
+
+# Show line numbers, git changes, and header
+--style="numbers,changes,header"
+
+# Enable italics (if terminal supports)
+--italic-text=always
+
+# Paging behavior: auto, never, always
+--paging=auto
+
+# Wrap long lines: auto, never, character
+--wrap=auto
+
+# Tab width
+--tabs=4
+
+# Map file extensions to languages
+--map-syntax "*.conf:INI"
+--map-syntax ".gitignore:Git Ignore"
+--map-syntax "*.toml:TOML"

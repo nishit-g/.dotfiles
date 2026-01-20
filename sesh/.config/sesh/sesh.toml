@@ -1,0 +1,26 @@
+# sesh configuration
+# https://github.com/joshmedeski/sesh
+
+[default_session]
+# Command to run when creating a new session
+startup_command = "nvim"
+
+# Named sessions (quick access)
+[[session]]
+name = "dotfiles"
+path = "~/dotfiles"
+startup_command = "nvim"
+
+# Directories to scan for projects
+[[session_search]]
+path = "~/personal"
+depth = 1
+
+# Add more project roots as needed:
+# [[session_search]]
+# path = "~/work"
+# depth = 1
+
+# [[session_search]]
+# path = "~/repos"
+# depth = 2

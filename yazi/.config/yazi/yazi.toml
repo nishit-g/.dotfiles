@@ -1,0 +1,56 @@
+# yazi configuration
+# https://yazi-rs.github.io/docs/configuration/yazi
+
+[manager]
+# Show hidden files
+show_hidden = true
+
+# Sorting
+sort_by = "natural"
+sort_sensitive = false
+sort_reverse = false
+sort_dir_first = true
+
+# Line mode: none, size, permissions, mtime
+linemode = "size"
+
+# Show symlink target
+show_symlink = true
+
+# Ratio of parent:current:preview columns
+ratio = [1, 3, 4]
+
+[preview]
+# Maximum preview dimensions
+max_width = 1000
+max_height = 1000
+
+# Image preview (requires ueberzugpp on Linux, native on macOS)
+image_filter = "lanczos3"
+image_quality = 75
+
+# Cache previews
+cache_dir = ""
+
+[opener]
+edit = [
+    { run = 'nvim "$@"', block = true, for = "unix" }
+]
+open = [
+    { run = 'open "$@"', desc = "Open", for = "macos" }
+]
+reveal = [
+    { run = 'open -R "$1"', desc = "Reveal in Finder", for = "macos" }
+]
+
+[open]
+rules = [
+    { name = "*/", use = ["edit", "open", "reveal"] },
+    { mime = "text/*", use = ["edit", "reveal"] },
+    { mime = "image/*", use = ["open", "reveal"] },
+    { mime = "video/*", use = ["open", "reveal"] },
+    { mime = "audio/*", use = ["open", "reveal"] },
+    { mime = "application/json", use = ["edit", "reveal"] },
+    { mime = "application/x-ndjson", use = ["edit", "reveal"] },
+    { mime = "*", use = ["open", "reveal"] },
+]

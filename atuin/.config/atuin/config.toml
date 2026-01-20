@@ -1,0 +1,45 @@
+# atuin configuration
+# https://docs.atuin.sh/configuration/config/
+
+# Search mode: prefix, fulltext, fuzzy, skim
+search_mode = "fuzzy"
+
+# Filter mode: global (all history), host (this machine), session, directory
+filter_mode = "global"
+filter_mode_shell_up_key_binding = "session"
+
+# Style: auto, full, compact
+style = "compact"
+
+# Show preview of full command
+show_preview = true
+
+# Inline height (number of lines)
+inline_height = 20
+
+# Key binding style: auto, emacs, vim-normal, vim-insert
+keymap_mode = "auto"
+
+# Enter accepts immediately
+enter_accept = true
+
+# Sync settings (optional - enable if you want cross-machine sync)
+# sync_address = "https://api.atuin.sh"
+# sync_frequency = "1h"
+
+# History settings
+history_filter = [
+    "^ls",
+    "^cd ",
+    "^cat ",
+    "^echo ",
+    "^pwd$",
+    "^clear$",
+    "^exit$",
+]
+
+# Don't record commands with secrets
+secrets_filter = true
+
+# Record command exit status
+exit_mode = "return-original"

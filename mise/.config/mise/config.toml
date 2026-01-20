@@ -1,0 +1,30 @@
+# mise configuration (replaces asdf)
+# https://mise.jdx.dev/configuration.html
+
+[settings]
+# Automatically install missing tools when entering directory
+auto_install = true
+
+# Support asdf .tool-versions files
+legacy_version_file = true
+
+# Show "mise: installing X" messages
+quiet = false
+
+# Experimental features
+experimental = false
+
+# Trust all config files (set false for security in shared machines)
+trusted_config_paths = ["~/"]
+
+[tools]
+# Global tool versions (customize as needed)
+# These are defaults - project-level .tool-versions or mise.toml override
+node = "lts"
+python = "3.12"
+
+# Add more as needed:
+# go = "latest"
+# rust = "stable"
+# ruby = "3.3"
+# java = "21"
