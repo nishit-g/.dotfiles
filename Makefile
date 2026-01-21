@@ -1,7 +1,7 @@
 .PHONY: install update link brew apps macos clean help
 
 DOTFILES := $(shell pwd)
-STOW_DIRS := nvim zsh tmux alacritty git sesh atuin yazi bat mise aerospace karabiner dev bin ssh opencode vibe-kanban
+STOW_DIRS := nvim zsh tmux alacritty git sesh atuin yazi bat mise aerospace karabiner dev bin ssh opencode vibe-kanban agents
 
 help:
 	@echo "Usage: make [target]"
