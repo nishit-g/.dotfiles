@@ -69,6 +69,7 @@ alias ga='git add .'
 alias gc='git commit'
 alias gp='git push'
 alias lg='lazygit'
+alias oc='opencode'
 
 function y() {
   local tmp cwd

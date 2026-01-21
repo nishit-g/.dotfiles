@@ -60,3 +60,25 @@ backup_existing() {
     warn "Backed up $file → $backup"
   fi
 }
+
+link_app_support() {
+  local app_id="$1"
+  local dotfiles_dir="$2"
+  local source_dir="$3"
+  local target_dir="$HOME/Library/Application Support/$app_id"
+  
+  mkdir -p "$target_dir"
+  
+  for file in "$dotfiles_dir/$source_dir"/*.json; do
+    [[ -f "$file" ]] || continue
+    local basename=$(basename "$file")
+    local target="$target_dir/$basename"
+    
+    if [[ -e "$target" && ! -L "$target" ]]; then
+      mv "$target" "${target}.bak"
+    fi
+    
+    rm -f "$target"
+    ln -sf "$file" "$target"
+  done
+}

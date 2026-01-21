@@ -1,7 +1,7 @@
 .PHONY: install update link brew apps macos clean help
 
 DOTFILES := $(shell pwd)
-STOW_DIRS := nvim zsh tmux alacritty git sesh atuin yazi bat mise aerospace karabiner dev bin ssh opencode
+STOW_DIRS := nvim zsh tmux alacritty git sesh atuin yazi bat mise aerospace karabiner dev bin ssh opencode vibe-kanban
 
 help:
 	@echo "Usage: make [target]"
@@ -32,10 +32,12 @@ apps:
 link:
 	@mkdir -p $(HOME)/.config $(HOME)/bin
 	@for dir in $(STOW_DIRS); do \
+		if [ "$$dir" = "vibe-kanban" ]; then continue; fi; \
 		if [ -d "$$dir" ]; then \
 			stow --dir=$(DOTFILES) --target=$(HOME) --restow $$dir 2>/dev/null || true; \
 		fi \
 	done
+	@./scripts/link-vibe-kanban.sh
 	@echo "✔ Configs linked"
 
 unlink:

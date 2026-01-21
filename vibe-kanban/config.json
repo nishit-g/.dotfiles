@@ -1,0 +1,44 @@
+{
+  "config_version": "v8",
+  "theme": "SYSTEM",
+  "executor_profile": {
+    "executor": "OPENCODE",
+    "variant": "DEFAULT"
+  },
+  "disclaimer_acknowledged": true,
+  "onboarding_acknowledged": true,
+  "notifications": {
+    "sound_enabled": true,
+    "push_enabled": true,
+    "sound_file": "COW_MOOING"
+  },
+  "editor": {
+    "editor_type": "CUSTOM",
+    "custom_command": "nv",
+    "remote_ssh_host": null,
+    "remote_ssh_user": null
+  },
+  "github": {
+    "pat": null,
+    "oauth_token": null,
+    "username": null,
+    "primary_email": null,
+    "default_pr_base": "main"
+  },
+  "analytics_enabled": true,
+  "workspace_dir": null,
+  "last_app_version": "0.0.158",
+  "show_release_notes": false,
+  "language": "BROWSER",
+  "git_branch_prefix": "vk",
+  "showcases": {
+    "seen_features": [
+      "task-panel-onboarding"
+    ]
+  },
+  "pr_auto_description_enabled": true,
+  "pr_auto_description_prompt": null,
+  "beta_workspaces": false,
+  "beta_workspaces_invitation_sent": false,
+  "commit_reminder": false
+}

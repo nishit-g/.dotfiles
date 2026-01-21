@@ -29,7 +29,7 @@ readonly BREW_CASKS=(
 readonly STOW_PACKAGES=(
   nvim zsh tmux alacritty git
   sesh atuin yazi bat mise
-  aerospace karabiner dev bin ssh opencode
+  aerospace karabiner dev bin ssh opencode vibe-kanban
 )
 
 install_homebrew() {
@@ -91,8 +91,10 @@ link_configs() {
   info "Linking configs..."
   mkdir -p "$HOME/.config" "$HOME/bin"
   for pkg in "${STOW_PACKAGES[@]}"; do
+    [[ "$pkg" == "vibe-kanban" ]] && continue
     stow_package "$pkg" "$DOTFILES_DIR"
   done
+  link_app_support "ai.bloop.vibe-kanban" "$DOTFILES_DIR" "vibe-kanban"
   success "Configs linked"
 }
 
