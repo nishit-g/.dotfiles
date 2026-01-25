@@ -6,7 +6,6 @@ return {
     event = "VeryLazy",
     config = function()
       require("mini.surround").setup()
-      require("mini.comment").setup()
       require("mini.pairs").setup()
       require("mini.bufremove").setup()
       require("mini.ai").setup({ n_lines = 500 })
@@ -56,7 +55,7 @@ return {
           "json", "yaml", "html", "css", "markdown",
         },
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = { enable = false },  -- Use native indent (TS indent is CPU-heavy)
       })
     end,
   },
