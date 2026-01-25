@@ -45,7 +45,7 @@ return {
         "debugpy",
       },
       auto_update = false,
-      run_on_start = true,
+      run_on_start = false,  -- Run :MasonToolsUpdate manually to check/install
     },
   },
 
