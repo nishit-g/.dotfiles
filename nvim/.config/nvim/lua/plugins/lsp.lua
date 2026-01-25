@@ -58,29 +58,52 @@ return {
       "neovim/nvim-lspconfig",
     },
     config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "pyright",
-          "jsonls",
-          "cssls",
-          "html",
-          "bashls",
-          "tailwindcss",
-        },
-      })
-
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local ok_blink, blink = pcall(require, "blink.cmp")
       if ok_blink and blink.get_lsp_capabilities then
         capabilities = blink.get_lsp_capabilities(capabilities)
       end
 
-      vim.lsp.config("*", {
-        capabilities = capabilities,
+      -- Server-specific settings
+      local servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+              diagnostics = { globals = { "vim" } },
+            },
+          },
+        },
+        ts_ls = {
+          single_file_support = false,
+        },
+        tailwindcss = {
+          flags = {
+            debounce_text_changes = 1000,
+          },
+        },
+        pyright = {},
+        jsonls = {},
+        cssls = {},
+        html = {},
+        bashls = {},
+      }
+
+      require("mason-lspconfig").setup({
+        ensure_installed = vim.tbl_keys(servers),
       })
 
+      -- Setup handlers pattern - ensures each server is configured ONCE
+      require("mason-lspconfig").setup_handlers({
+        function(server_name)
+          local server_opts = servers[server_name] or {}
+          server_opts.capabilities = capabilities
+          require("lspconfig")[server_name].setup(server_opts)
+        end,
+      })
+
+      -- LSP keymaps on attach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
@@ -94,6 +117,7 @@ return {
           map("n", "gr", vim.lsp.buf.references, "Goto references")
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
         end,
       })
     end,
@@ -125,7 +149,7 @@ return {
     cmd = "ConformInfo",
     keys = {
       { "<leader>mp", function()
-        require("conform").format({ lsp_fallback = true, async = false, timeout_ms = 3000 })
+        require("conform").format({ lsp_fallback = true, async = true })
       end, mode = { "n", "v" }, desc = "Format file or range" },
     },
     opts = {
@@ -176,7 +200,7 @@ return {
         markdown = { "markdownlint" },
       }
 
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+      vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         group = vim.api.nvim_create_augroup("NvimLintAutoGroup", { clear = true }),
         callback = function()
           pcall(lint.try_lint)
