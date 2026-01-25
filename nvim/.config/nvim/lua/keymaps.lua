@@ -99,6 +99,15 @@ map("n", "<C-x>", function()
   end
 end, { silent = true, desc = "Close buffer" })
 
+map("n", "<leader>x", function()
+  local ok, bufremove = pcall(require, "mini.bufremove")
+  if ok then
+    bufremove.delete(0, false)
+  else
+    vim.cmd("bdelete")
+  end
+end, { silent = true, desc = "Close buffer" })
+
 map("n", "<leader>bd", function()
   local ok, bufremove = pcall(require, "mini.bufremove")
   if ok then
