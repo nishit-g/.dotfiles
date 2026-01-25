@@ -18,8 +18,8 @@ return {
           side = "right",
         },
         renderer = {
-          highlight_git = true,
-          highlight_opened_files = "all",
+          highlight_git = false,  -- Slow in large repos
+          highlight_opened_files = "none",  -- Less tracking overhead
           icons = {
             glyphs = {
               git = {
