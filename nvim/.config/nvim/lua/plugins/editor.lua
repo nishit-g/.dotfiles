@@ -9,11 +9,6 @@ return {
       require("mini.pairs").setup()
       require("mini.bufremove").setup()
       require("mini.ai").setup({ n_lines = 500 })
-      require("mini.indentscope").setup({
-        symbol = "│",
-        draw = { delay = 50 },
-        options = { try_as_border = true },
-      })
     end,
   },
 
@@ -22,14 +17,6 @@ return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-      { "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "Harpoon menu" },
-      { "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon add" },
-      { "<M-h>", function() require("harpoon"):list():select(1) end, desc = "Harpoon 1" },
-      { "<M-j>", function() require("harpoon"):list():select(2) end, desc = "Harpoon 2" },
-      { "<M-k>", function() require("harpoon"):list():select(3) end, desc = "Harpoon 3" },
-      { "<M-l>", function() require("harpoon"):list():select(4) end, desc = "Harpoon 4" },
-    },
     config = function()
       require("harpoon").setup({})
     end,
@@ -47,6 +34,10 @@ return {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-context",
+      "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
@@ -55,7 +46,62 @@ return {
           "json", "yaml", "html", "css", "markdown",
         },
         highlight = { enable = true },
-        indent = { enable = false },  -- Use native indent (TS indent is CPU-heavy)
+        indent = { enable = false },
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+              ["aa"] = "@parameter.outer",
+              ["ia"] = "@parameter.inner",
+              ["ai"] = "@conditional.outer",
+              ["ii"] = "@conditional.inner",
+              ["al"] = "@loop.outer",
+              ["il"] = "@loop.inner",
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]m"] = "@function.outer",
+              ["]]"] = "@class.outer",
+              ["]a"] = "@parameter.inner",
+            },
+            goto_next_end = {
+              ["]M"] = "@function.outer",
+              ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[m"] = "@function.outer",
+              ["[["] = "@class.outer",
+              ["[a"] = "@parameter.inner",
+            },
+            goto_previous_end = {
+              ["[M"] = "@function.outer",
+              ["[]"] = "@class.outer",
+            },
+          },
+          swap = {
+            enable = true,
+            swap_next = { ["<leader>sn"] = "@parameter.inner" },
+            swap_previous = { ["<leader>sp"] = "@parameter.inner" },
+          },
+        },
+      })
+
+      require("treesitter-context").setup({
+        enable = true,
+        max_lines = 3,
+        min_window_height = 0,
+        line_numbers = true,
+        multiline_threshold = 20,
+        trim_scope = "outer",
+        mode = "cursor",
       })
     end,
   },
@@ -120,31 +166,11 @@ return {
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
-    keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Diffview open" },
-      { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "Diffview file history" },
-      { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "Diffview branch history" },
-      { "<leader>gq", "<cmd>DiffviewClose<CR>", desc = "Diffview close" },
-    },
     opts = {
       enhanced_diff_hl = true,
       view = {
         default = { layout = "diff2_horizontal" },
         merge_tool = { layout = "diff3_mixed" },
-      },
-    },
-  },
-
-  -- Indent guides
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    main = "ibl",
-    opts = {
-      indent = { char = "│", tab_char = "│" },
-      scope = { enabled = false },
-      exclude = {
-        filetypes = { "help", "dashboard", "neo-tree", "Trouble", "lazy", "mason", "notify", "toggleterm" },
       },
     },
   },
@@ -162,11 +188,6 @@ return {
     "folke/trouble.nvim",
     branch = "main",
     cmd = "Trouble",
-    keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
-      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Buffer Diagnostics" },
-      { "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "Symbols (Trouble)" },
-    },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       use_diagnostic_signs = true,
@@ -177,9 +198,6 @@ return {
   {
     "stevearc/aerial.nvim",
     event = "LspAttach",
-    keys = {
-      { "<leader>la", "<cmd>AerialToggle<CR>", desc = "Aerial toggle" },
-    },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       backends = { "lsp", "treesitter", "markdown" },
@@ -199,12 +217,5 @@ return {
     "folke/flash.nvim",
     event = "VeryLazy",
     opts = {},
-    keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-    },
   },
 }

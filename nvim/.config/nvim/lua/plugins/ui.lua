@@ -48,23 +48,53 @@ return {
 
       bufferline.setup({
         options = {
+          mode = "buffers",
           numbers = "none",
           close_command = "bdelete! %d",
           right_mouse_command = "bdelete! %d",
           left_mouse_command = "buffer %d",
           indicator = { icon = "▎", style = "icon" },
-          buffer_close_icon = "",
+          buffer_close_icon = "󰅖",
           modified_icon = "●",
-          close_icon = "",
-          left_trunc_marker = "",
-          right_trunc_marker = "",
-          max_name_length = 30,
-          tab_size = 18,
-          diagnostics = false,
+          close_icon = "",
+          left_trunc_marker = "",
+          right_trunc_marker = "",
+          max_name_length = 24,
+          max_prefix_length = 15,
+          tab_size = 20,
+          diagnostics = "nvim_lsp",
+          diagnostics_update_in_insert = false,
+          diagnostics_indicator = function(count, level)
+            local icon = level:match("error") and " " or " "
+            return " " .. icon .. count
+          end,
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "Explorer",
+              highlight = "Directory",
+              separator = true,
+            },
+          },
+          show_buffer_icons = true,
           show_buffer_close_icons = true,
-          show_close_icon = true,
+          show_close_icon = false,
+          show_tab_indicators = true,
           separator_style = "thin",
           always_show_bufferline = true,
+          hover = {
+            enabled = true,
+            delay = 150,
+            reveal = { "close" },
+          },
+        },
+        highlights = {
+          buffer_selected = { bold = true, italic = false },
+          diagnostic_selected = { bold = true },
+          error_selected = { bold = true },
+          error_diagnostic_selected = { bold = true },
+          warning_selected = { bold = true },
+          warning_diagnostic_selected = { bold = true },
         },
       })
     end,
@@ -77,11 +107,57 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "gruvbox-flat",
+        theme = "auto",
         globalstatus = true,
-        component_separators = "|",
-        section_separators = "",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
       },
+      sections = {
+        lualine_a = { { "mode", fmt = function(str) return str:sub(1, 1) end } },
+        lualine_b = {
+          { "branch", icon = "" },
+          {
+            "diff",
+            symbols = { added = " ", modified = " ", removed = " " },
+            colored = true,
+          },
+        },
+        lualine_c = {
+          { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+          { "filename", path = 1, symbols = { modified = " ●", readonly = " ", unnamed = "[No Name]" } },
+        },
+        lualine_x = {
+          {
+            "diagnostics",
+            sources = { "nvim_diagnostic" },
+            symbols = { error = " ", warn = " ", info = " ", hint = " " },
+          },
+          {
+            function()
+              local clients = vim.lsp.get_clients({ bufnr = 0 })
+              if #clients == 0 then return "" end
+              local names = {}
+              for _, client in ipairs(clients) do
+                if client.name ~= "copilot" then
+                  table.insert(names, client.name)
+                end
+              end
+              if #names == 0 then return "" end
+              return " " .. table.concat(names, ", ")
+            end,
+          },
+        },
+        lualine_y = {
+          { "progress", separator = " ", padding = { left = 1, right = 0 } },
+          { "location", padding = { left = 0, right = 1 } },
+        },
+        lualine_z = {
+          function()
+            return " " .. os.date("%H:%M")
+          end,
+        },
+      },
+      extensions = { "lazy", "trouble", "nvim-tree", "quickfix" },
     },
   },
 
@@ -101,7 +177,6 @@ return {
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
     },
     opts = {
       lsp = {
@@ -118,69 +193,10 @@ return {
         inc_rename = true,
         lsp_doc_border = false,
       },
+      notify = { enabled = false },
+      messages = { enabled = true },
     },
   },
 
-  -- Dashboard
-  {
-    "nvimdev/dashboard-nvim",
-    event = "VimEnter",
-    opts = function()
-      local logo = [[
- ██████╗██╗  ██╗ █████╗  ██████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗██╗  ██╗
-██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║██║ ██╔╝
-██║     ███████║███████║██║   ██║███████╗██╔████╔██║██║   ██║██╔██╗ ██║█████╔╝ 
-██║     ██╔══██║██╔══██║██║   ██║╚════██║██║╚██╔╝██║██║   ██║██║╚██╗██║██╔═██╗ 
-╚██████╗██║  ██║██║  ██║╚██████╔╝███████║██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║  ██╗
- ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝
-      ]]
 
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
-
-      local opts = {
-        theme = "doom",
-        hide = {
-          -- this is taken care of by lualine
-          statusline = false,
-        },
-        config = {
-          header = vim.split(logo, "\n"),
-          center = {
-            { action = "FzfLua files", desc = " Find File", icon = " ", key = "f" },
-            { action = "ene | startinsert", desc = " New File", icon = " ", key = "n" },
-            { action = "FzfLua oldfiles", desc = " Recent Files", icon = " ", key = "r" },
-            { action = "FzfLua live_grep", desc = " Find Text", icon = " ", key = "g" },
-            { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
-            { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
-            { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },
-            { action = "qa", desc = " Quit", icon = " ", key = "q" },
-          },
-          footer = function()
-            local stats = require("lazy").stats()
-            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-            return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
-          end,
-        },
-      }
-
-      for _, button in ipairs(opts.config.center) do
-        button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
-        button.key_format = "  %s"
-      end
-
-      -- close Lazy and re-open when the dashboard is ready
-      if vim.o.filetype == "lazy" then
-        vim.cmd.close()
-        vim.api.nvim_create_autocmd("User", {
-          pattern = "DashboardLoaded",
-          callback = function()
-            require("lazy").show()
-          end,
-        })
-      end
-
-      return opts
-    end,
-    dependencies = { { "nvim-tree/nvim-web-devicons" } },
-  },
 }

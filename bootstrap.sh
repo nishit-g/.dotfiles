@@ -29,7 +29,7 @@ readonly BREW_CASKS=(
 readonly STOW_PACKAGES=(
   nvim zsh tmux alacritty git
   sesh atuin yazi bat mise
-  aerospace karabiner dev bin ssh opencode vibe-kanban
+  aerospace karabiner dev bin ssh opencode vibe-kanban agents
 )
 
 install_homebrew() {

@@ -2,7 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "google_auth": false,
   "agents": {
-    "Sisyphus": {
+    "atlas": {
+      "model": "google/antigravity-claude-sonnet-4-5"
+    },
+    "sisyphus": {
       "model": "google/antigravity-claude-opus-4-5-thinking-max"
     },
     "oracle": {
@@ -22,6 +25,18 @@
     },
     "multimodal-looker": {
       "model": "google/antigravity-gemini-3-flash"
+    },
+    "prometheus": {
+      "model": "google/antigravity-claude-opus-4-5-thinking-max"
+    },
+    "metis": {
+      "model": "google/antigravity-claude-sonnet-4-5"
+    },
+    "momus": {
+      "model": "google/antigravity-claude-sonnet-4-5"
+    },
+    "sisyphus-junior": {
+      "model": "google/antigravity-claude-sonnet-4-5"
     }
   }
 }

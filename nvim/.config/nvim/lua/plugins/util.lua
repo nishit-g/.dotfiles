@@ -35,17 +35,16 @@ return {
       wk.setup({})
       wk.add({
         { "<leader>b", group = "buffers" },
-        { "<leader>d", group = "debug" },
-        { "<leader>e", group = "explorer" },
+        { "<leader>c", group = "code" },
         { "<leader>f", group = "find" },
         { "<leader>g", group = "git" },
         { "<leader>h", group = "hunks" },
         { "<leader>l", group = "lsp" },
-        { "<leader>m", group = "meta/markdown" },
+        { "<leader>m", group = "misc" },
         { "<leader>q", group = "session/quit" },
-        { "<leader>r", group = "rename" },
-        { "<leader>s", group = "search/notify" },
+        { "<leader>s", group = "swap/search" },
         { "<leader>t", group = "test" },
+        { "<leader>u", group = "ui" },
         { "<leader>w", group = "windows" },
         { "<leader>x", group = "diagnostics" },
       })

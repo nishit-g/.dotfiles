@@ -100,13 +100,21 @@ map("n", "<C-x>", function()
 end, { silent = true, desc = "Close buffer" })
 
 map("n", "<leader>x", function()
-  local ok, bufremove = pcall(require, "mini.bufremove")
-  if ok then
-    bufremove.delete(0, false)
+  local win_count = #vim.api.nvim_tabpage_list_wins(0)
+  if win_count > 1 then
+    vim.cmd("close")
   else
-    vim.cmd("bdelete")
+    local buf_count = #vim.fn.getbufinfo({ buflisted = 1 })
+    if buf_count > 1 then
+      local ok, bufremove = pcall(require, "mini.bufremove")
+      if ok then
+        bufremove.delete(0, false)
+      else
+        vim.cmd("bdelete")
+      end
+    end
   end
-end, { silent = true, desc = "Close buffer" })
+end, { silent = true, desc = "Smart close (split > buffer)" })
 
 map("n", "<leader>bd", function()
   local ok, bufremove = pcall(require, "mini.bufremove")
@@ -173,9 +181,12 @@ map("n", "]t", function() require("todo-comments").jump_next() end, { silent = t
 -----------------------------------------------------------------------
 map("n", "<leader>gs", "<cmd>Git<CR>", { silent = true, desc = "Git status" })
 map("n", "<leader>gb", "<cmd>Git blame<CR>", { silent = true, desc = "Git blame" })
-map("n", "<leader>gl", "<cmd>Git log<CR>", { silent = true, desc = "Git log" })
 map("n", "<leader>gD", "<cmd>Gvdiffsplit<CR>", { silent = true, desc = "Git diff vsplit" })
 map("n", "<leader>gp", "<cmd>Git push<CR>", { silent = true, desc = "Git push" })
+map("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", { silent = true, desc = "Diffview open" })
+map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", { silent = true, desc = "Diffview file history" })
+map("n", "<leader>gH", "<cmd>DiffviewFileHistory<CR>", { silent = true, desc = "Diffview branch history" })
+map("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { silent = true, desc = "Diffview close" })
 
 -----------------------------------------------------------------------
 -- Lint / Format helpers
@@ -238,3 +249,27 @@ map("n", "<leader>pr", function()
     vim.notify("Not a git repo", vim.log.levels.WARN)
   end
 end, { silent = true, desc = "cd to project root (git)" })
+
+-----------------------------------------------------------------------
+-- Harpoon
+-----------------------------------------------------------------------
+map("n", "<C-e>", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, { desc = "Harpoon menu" })
+map("n", "<leader>a", function() require("harpoon"):list():add() end, { desc = "Harpoon add" })
+map("n", "<M-h>", function() require("harpoon"):list():select(1) end, { desc = "Harpoon 1" })
+map("n", "<M-j>", function() require("harpoon"):list():select(2) end, { desc = "Harpoon 2" })
+map("n", "<M-k>", function() require("harpoon"):list():select(3) end, { desc = "Harpoon 3" })
+map("n", "<M-l>", function() require("harpoon"):list():select(4) end, { desc = "Harpoon 4" })
+
+-----------------------------------------------------------------------
+-- Flash
+-----------------------------------------------------------------------
+map({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
+map({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
+map("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
+map({ "o", "x" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
+map("c", "<C-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
+
+-----------------------------------------------------------------------
+-- Aerial
+-----------------------------------------------------------------------
+map("n", "<leader>la", "<cmd>AerialToggle<CR>", { silent = true, desc = "Aerial toggle" })

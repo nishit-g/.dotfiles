@@ -92,21 +92,20 @@ return {
 
       require("mason-lspconfig").setup({
         ensure_installed = vim.tbl_keys(servers),
-      })
-
-      -- Setup handlers pattern - ensures each server is configured ONCE
-      require("mason-lspconfig").setup_handlers({
-        function(server_name)
-          local server_opts = servers[server_name] or {}
-          server_opts.capabilities = capabilities
-          require("lspconfig")[server_name].setup(server_opts)
-        end,
+        handlers = {
+          function(server_name)
+            local server_opts = servers[server_name] or {}
+            server_opts.capabilities = capabilities
+            require("lspconfig")[server_name].setup(server_opts)
+          end,
+        },
       })
 
       -- LSP keymaps on attach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
           end
@@ -117,7 +116,13 @@ return {
           map("n", "gr", vim.lsp.buf.references, "Goto references")
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
-          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+
+          if client and client.supports_method("textDocument/inlayHint") then
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+            map("n", "<leader>uh", function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+            end, "Toggle inlay hints")
+          end
         end,
       })
     end,
